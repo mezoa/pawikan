@@ -1,0 +1,53 @@
+---
+# PROJECT_TEMPLATE.mdx
+# Copy this file to content/projects/<short-name>.mdx, then replace every [bracket].
+# The file name (without .mdx) becomes the web address: /projects/<short-name>
+# Run `npm run build` to check it. If something is missing, the build tells you what.
+
+title: "[Project name]"
+summary: "[One sentence: the problem it solves. 20 to 200 characters.]"
+date: 2026-11-01            # the date you finished or last updated it (YYYY-MM-DD)
+status: "live"              # live | building | archived
+published: true             # false = hidden everywhere (use for anything not yet approved)
+featured: true              # true = appears in the home page grid
+order: 10                   # smaller number shows first
+role: "[Your role, for example: Sole developer]"
+techStack:
+  - "[Tool 1]"
+  - "[Tool 2]"
+links:
+  repo: "https://github.com/[user]/[repo]"       # delete any line you don't have
+  # demo: "https://..."
+  # video: "https://..."
+  # paper: "https://doi.org/..."
+metrics:
+  - label: "[What you measured]"
+    value: "[The number]"
+    kind: "outcome"          # outcome = a measured result | scope = size only (like "2 modules")
+    note: "[How you measured it]"
+# cover: "/images/[file].png"
+# privacyNote: "[Shown on the page if set. Use for institutional projects.]"
+---
+
+## Problem
+
+[Who has this problem and why it matters. 3 to 5 sentences. No buzzwords.]
+
+## Architecture
+
+[Add a simple diagram image or a short list: what talks to what. Then 2 to 3 trade-offs: "I chose X over Y because ..."]
+
+## Tech stack choices
+
+| Tool | Why I used it |
+| --- | --- |
+| [Tool 1] | [Reason] |
+| [Tool 2] | [Reason] |
+
+## Proof of work
+
+[The numbers from the frontmatter, in words: what you measured, how, and what the result means. Link the repo. Add a short video if you have one.]
+
+## Limitations and failure modes
+
+[Honest list: what it cannot do, known bugs, what is not built yet, what you would change next. At least 2 items.]
