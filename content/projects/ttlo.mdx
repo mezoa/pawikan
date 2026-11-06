@@ -1,0 +1,98 @@
+---
+title: "TTLO Portfolio Management System"
+summary: "A web application for a university Technology Transfer and Licensing Office, made to improve its IP protection application process and workload management."
+date: 2025-10-30
+status: "archived"
+published: true
+featured: true
+order: 20
+role: "Group leader and co-author. I initiated the paper and was in charge of the client-side UI, admin-side UI, form UI, and backend and database configuration."
+techStack:
+  - "Next.js"
+  - "PostgreSQL"
+  - "HTML, CSS, JS"
+  - "Figma"
+links:
+  paper: "https://doi.org/10.5109/7395544"
+metrics:
+  - label: "SUS score, clients"
+    value: "70.5 / 100"
+    kind: "outcome"
+    note: "Ten-item System Usability Scale, given after testing, in an ISO 9241-11 evaluation. Grade B, rated Good. Reported in the paper's table of SUS scores."
+  - label: "SUS score, admins"
+    value: "78.0 / 100"
+    kind: "outcome"
+    note: "Same questionnaire and evaluation, for TTLO staff and administrators. Grade B, rated Good. Reported in the paper's table of SUS scores."
+  - label: "Hardest task, success rate"
+    value: "60%"
+    kind: "outcome"
+    note: "Admin task Manage Application Phases, from observed task completion. Reported in the paper's admin task table."
+  - label: "Tasks tested"
+    value: "5 per user group"
+    kind: "scope"
+    note: "Role-specific task scenarios for clients and for admin/staff, as listed in the paper."
+---
+
+## Problem
+
+The Technology Transfer and Licensing Office (TTLO) of Caraga State University handles intellectual property (IP) protection applications. The office relied on tools such as Google Docs and Google Sheets. With data spread across platforms, it could get duplicated, tracking updates could be slow, and status could be hard to follow.
+
+The study set out to improve the application process and workload management, and to secure data access.
+
+## Architecture
+
+The system handles client registration, task submission, task assignment and central monitoring of status. Its main parts are digital forms with validation, secure data access control and role-based user management.
+
+It has two sides:
+
+- **Client side.** Outside users submit a profile form and a deed of assignment, track their application status, review IP guidelines, and view news and updates.
+- **Admin side.** TTLO staff and administrators assign staff to applications, review IP deed submissions, manage application phases, schedule events on a calendar, and manage user accounts.
+
+The design uses the MVC pattern in a three-tier structure: presentation, business logic and data.
+
+## Tech stack choices
+
+The paper describes the stack as "almost entirely NextJS and Postgres".
+
+| Tool | What it does here |
+| --- | --- |
+| Next.js | The web application framework. |
+| PostgreSQL | The relational database. |
+| HTML, CSS, JS | The user interface layer. |
+| Figma | High-fidelity wireframes. |
+
+The team also used UML diagrams, entity relationship diagrams and use case diagrams. Development followed an Agile life cycle.
+
+## Proof of work
+
+The work is published as "Web-based Portfolio Management System for Technology Transfer and Licensing Offices" in the Proceedings of International Exchange and Innovation Conference on Engineering & Sciences (IEICES) 11, pp. 377-382, Oct 2025. It has four authors. [Read the paper through its DOI](https://doi.org/10.5109/7395544).
+
+My part was leading the group, initiating the paper, and being in charge of the client-side UI, admin-side UI, form UI, and backend and database configuration. The paper does not list individual roles, so this is my own statement.
+
+The system was evaluated with the ISO 9241-11 framework, which covers effectiveness, efficiency and satisfaction. Clients and admin/staff each completed five role-specific tasks while being observed. Time logs were kept. Each group then answered the ten-item System Usability Scale (SUS).
+
+The SUS score was 70.5 for clients and 78.0 for admins. Both were grade B, rated Good.
+
+Per-task success rates:
+
+- **Clients.** 100% on the deed, guidelines and news tasks. 80% on the profile form and status tracking.
+- **Admins.** 100% on four tasks. 60% on Manage Application Phases.
+
+The longest average times were 188.2 s for the client profile form and 204.2 s for Manage Application Phases.
+
+## Limitations and failure modes
+
+- The paper does not report how many people took part.
+- The paper does not say whether the system was deployed for real use.
+- Time limits came from the developers' own trial runs, multiplied by two. They are not an outside benchmark.
+- Users were confused by some interface modules, form navigation and subtask labeling.
+- Users met system lag from ongoing development.
+- Admins struggled most with Manage Application Phases.
+- Each office has its own workflow, so implementation may differ for other offices.
+
+The paper's own recommendations:
+
+- Refine the user interface further.
+- Use a more minimal design with appropriate icons and clear instructions, so new users are not overwhelmed.
+- Use synchronized data fields and dropdown selections to reduce repeated data entry.
+- Review the database for refinement.

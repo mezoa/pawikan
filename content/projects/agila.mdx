@@ -1,0 +1,131 @@
+---
+title: "Project Agila"
+summary: "A private, local assistant. It answers only from your saved links, notes and PDFs, with a citation, or says it cannot find the answer."
+date: 2026-11-02
+status: "live"
+published: true
+featured: true
+order: 10
+role: "Product owner and tester. I made the decisions, ran the checks and graded the answers by hand. Claude Code wrote the code and tests."
+techStack:
+  - "Python 3.12"
+  - "FastAPI"
+  - "PostgreSQL 17 + pgvector 0.8.7"
+  - "Ollama (qwen3.5:4b)"
+  - "fastembed (bge-small-en-v1.5)"
+  - "discord.py 2.7.1"
+  - "n8n 2.45.5"
+  - "pypdf 6.21.2"
+  - "Docker Compose"
+  - "GitHub Actions"
+  - "pytest and ruff"
+links:
+  repo: "https://github.com/mezoa/agila"
+metrics:
+  - label: "Retrieval hit@3"
+    value: "13 of 14 (0.93)"
+    kind: "outcome"
+    note: "evaluate retrieval command, raw top 3, on the 14 answerable questions, 2026-10-26. Held-out half, run once: 7 of 7. Target at least 0.80."
+  - label: "Refused with no model call"
+    value: "5 of 6"
+    kind: "outcome"
+    note: "Same run, on the 6 unanswerable questions. One passed the 0.68 floor. Target at least 5 of 6."
+  - label: "Median answer time"
+    value: "12.0 s"
+    kind: "outcome"
+    note: "evaluate answers command, second run, 2026-10-26, over 10 warm answers that called the model. Slowest 16.3 s. Target 60 s or less."
+  - label: "Citation precision (hand-graded)"
+    value: "13 yes, 8 partly, 0 no"
+    kind: "outcome"
+    note: "I graded 21 citation rows once by hand, 2026-10-26. The right document was cited in all 21."
+  - label: "Fresh-clone time to a working answer"
+    value: "14 min 8 s"
+    kind: "outcome"
+    note: "Stopwatch time, rebuilt from the creation time of the .git folder, 2026-10-31. Limit 20 min. Includes downloads and about 6 min of pauses."
+  - label: "Secret scan"
+    value: "50 commits, no leaks"
+    kind: "outcome"
+    note: "gitleaks, image pinned by digest, run on 2026-11-02."
+  - label: "Automated tests"
+    value: "899 plain + 190 database"
+    kind: "scope"
+    note: "uv run pytest and uv run --env-file .env pytest -m db. All passing locally on 2026-11-02. CI is green."
+  - label: "Similarity floor"
+    value: "0.68"
+    kind: "scope"
+    note: "Set on the tuning half by a rule that tries 0.00 to 1.00 in steps of 0.01, 2026-10-26."
+  - label: "Recorded deviations from the PRD"
+    value: "69"
+    kind: "scope"
+    note: "Rows counted in DEVIATIONS.md on 2026-11-06."
+---
+
+## Problem
+
+Agila is a personal knowledge assistant for one owner on one Windows laptop. You save links, pasted text, Markdown files and text PDFs. You ask a question and get a short answer that cites the saved passage.
+
+If the saved material does not support an answer, you get one fixed refusal: "I couldn't find this in your saved material." Agila was built with Claude Code under my direction and checks, for my own use and as portfolio proof for AI and automation work.
+
+## Architecture
+
+A question is embedded on the laptop. PostgreSQL with pgvector finds the closest saved passages. If the match is below the 0.68 floor, Agila refuses and calls no model. Otherwise a local model must return JSON with the answer and its citations. Pydantic checks the reply. Every citation must point to a retrieved passage. An invalid reply gets one retry.
+
+Only one module talks to Ollama. The CLI and the API share one question function. The Discord bot and n8n call the API.
+
+Trade-offs:
+
+- **Refuse instead of guess.** The floor stops weak matches, but 3 of 14 valid short questions were refused wrongly.
+- **Strict answers.** Checking every reply takes extra code and can cost one more model call.
+- **Privacy in the API.** Private documents are visible only to the `web` channel. Discord and n8n never see them, so private notes work only from the CLI or the web page.
+- **Safe web fetching.** Agila refuses private, local and reserved addresses before the first request and after each redirect. Internal-network links cannot be saved.
+
+## Tech stack choices
+
+| Tool | What it does here |
+| --- | --- |
+| Ollama with qwen3.5:4b | Runs the model on the laptop. It matched the 9b model at 19 of 20 correct in a test of 10 questions and 2 runs, and was about 2.5 times faster. |
+| PostgreSQL 17 with pgvector | Stores the saved passages and finds the closest ones. |
+| fastembed with bge-small-en-v1.5 | Creates 384-dimension embeddings. |
+| FastAPI | Serves the local API. It uses an API-key header and is bound to 127.0.0.1. |
+| discord.py | Runs the Discord bot with slash commands. |
+| n8n | Runs the weekly digest and the save workflow. It is pinned by image digest. |
+| pypdf | Reads text from PDFs. |
+| Docker Compose | Runs the services in containers on Docker Desktop. |
+| GitHub Actions | Runs ruff and the plain tests on `windows-latest`. |
+
+## Proof of work
+
+The plan was 15 build days, and the work finished on Nov 2, 2026. The [repository](https://github.com/mezoa/agila) has three tagged releases: `v0.1-core`, `v0.2` and `v1.0`.
+
+The evaluation used 20 questions: 14 answerable and 6 unanswerable. One half was for tuning. The other half was held out and run once. hit@3 was 13 of 14, and 7 of 7 on the held-out half. Agila refused 5 of the 6 unanswerable questions without calling the model.
+
+Median answer time was 12.0 s and the slowest was 16.3 s. I graded 21 citations by hand: 13 yes, 8 partly, 0 no. The right document was cited in all 21.
+
+A fresh clone reached a working answer in 14 min 8 s, against a 20 min limit. That includes downloads and pauses.
+
+There are 899 plain and 190 database tests, all passing locally on Nov 2. I specified and verified the tests. Claude Code wrote them. CI is green. A gitleaks scan of 50 commits found no leaks. The final library held 8 documents and 531 chunks.
+
+Checking also caught real mistakes:
+
+- I found a bug in the first answer-time run. Its median included refusals that took 0 s. The measure now covers only the 10 warm answers that called the model.
+- A clean clone showed a test that passed only on my laptop, because it loaded a model from a git-ignored cache. A fake embedder fixed it.
+
+## Limitations and failure modes
+
+- It is single-user and runs on one Windows laptop. The bot works from a phone only while the laptop, Docker and Ollama are running.
+- It does not read scanned PDFs, screenshots or video links. It has no accounts and no cloud version.
+- Answers are long for Discord.
+- Vague questions can rank a title page or table of contents above the real definition.
+- 3 of 14 valid short questions were refused by the floor, and one question was a retrieval miss.
+- One held-out unanswerable question passes the floor, and only the model's refusal stops it. An end-to-end check of that question was not measured.
+- 8 of 21 citations were graded only "partly". 6 of the 10 answered questions had every citation graded "yes".
+- The 20-question set is a regression check, not proof of quality. The floor was set on 10 tuning questions.
+- pypdf sometimes drops spaces. Obsidian can turn `#word` into tags.
+- There is no Discord command to unarchive or to list stale items.
+- The demo video and screenshots were not done.
+- The n8n workflow exports stay private because the n8n licence is unclear for publishing them.
+- $0 was the design target and `.env.example` holds no hosted-model key, but no formal cost result was recorded.
+- Not measured: peak RAM, real users other than me, lines of code, total build hours, and the share of work done by me and by Claude Code.
+- Not measured on the final version: the clean-clone test count and a restore test of the final backup.
+
+Next I would make answers shorter, improve ranking for vague questions, and use a bigger held-out question set.
