@@ -40,6 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 docs/
-content/projects/csu-core.mdx
 .claude/settings.local.json
 .tmp-shots/

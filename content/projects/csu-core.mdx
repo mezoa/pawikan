@@ -1,0 +1,68 @@
+---
+title: "CSU CORE"
+summary: "A web dashboard for university project reporting, built to replace spreadsheet-based, office-by-office reporting with one central system of record."
+date: 2026-07-01
+period: "Aug 2025 to mid 2026"
+status: "delivered"
+published: true
+featured: true
+order: 30
+role: "Contributor"
+techStack:
+  - "Nuxt"
+  - "Vuetify"
+  - "NestJS"
+  - "PostgreSQL"
+links: {}
+metrics:
+  - label: "Modules in phase 1"
+    value: "2 modules"
+    kind: "scope"
+  - label: "User types"
+    value: "5 types"
+    kind: "scope"
+  - label: "Database tables, 58 in use"
+    value: "84 tables"
+    kind: "scope"
+privacyNote: "Institutional system, shown with the university's permission. Screenshots, code and technical settings are not published."
+---
+
+## Problem
+
+A university office collected progress reports from many offices in separate spreadsheets and paper files. Putting them together for each review took a lot of manual work, and leaders had no single, current view.
+
+<Callout>
+CSU CORE (Centralized Operations and Reporting Engine) is a web dashboard built to give that office one central system of record.
+</Callout>
+
+## Architecture
+
+<ThreeBoxFlow browser="A Nuxt web app" api="A NestJS API" database="A PostgreSQL database" caption="A three-tier web application." />
+
+A Nuxt web app talks to a NestJS API, which checks who the user is and what they may do before touching a PostgreSQL database. Records go through draft, submitted, reviewed and published steps, and every action is logged.
+
+The backend calculates variances, weighted progress and financial totals automatically, and data is checked before it is saved.
+
+## Tech stack choices
+
+<Tradeoffs>
+  <Tradeoff tool="Nuxt" what="The front end web app." />
+  <Tradeoff tool="Vuetify" what="The front end, used with Nuxt." />
+  <Tradeoff tool="NestJS" what="The REST API." />
+  <Tradeoff tool="PostgreSQL" what="The database." />
+</Tradeoffs>
+
+## Proof of work
+
+<MetricRow />
+
+My role was contributor. I contributed as a programmer from the first prototype through phase 1. I worked on a web dashboard where offices enter their data, reviewers approve it, and leaders see charts of progress against targets. I also helped write the user and system manual.
+
+Phase 1 has two modules: University Operations, for physical and financial accomplishment reporting, and Construction of Infrastructure, for project monitoring from proposal to completion. Dashboards show S-curves, radar charts, bar charts and status cards.
+
+The work was built in phases between Aug 2025 and mid 2026, with stakeholder feedback rounds after each phase.
+
+## Limitations and failure modes
+
+- Two planned modules are not built yet.
+- The dashboards are only as good as the data each office enters.

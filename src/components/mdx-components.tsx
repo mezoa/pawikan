@@ -5,6 +5,7 @@ import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import { AgilaFlow } from "@/components/agila-flow";
 import { MetricCard } from "@/components/metric-card";
 import { ProofChart } from "@/components/proof-chart";
+import { ThreeBoxFlow } from "@/components/three-box-flow";
 import { publicFileExists, type Project } from "@/lib/content/projects";
 
 // MDX runs with JavaScript blocked, so these components take plain text props.
@@ -157,6 +158,7 @@ export const mdxComponents: MDXRemoteProps["components"] = {
   AgilaFlow,
   Callout,
   Figure,
+  ThreeBoxFlow,
   Transcript,
   Tradeoffs,
   Tradeoff,
