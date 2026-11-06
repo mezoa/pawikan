@@ -183,7 +183,7 @@ export default function Home() {
               alt={about.photo.alt}
               width={160}
               height={160}
-              className="size-40 shrink-0 rounded-xl object-cover"
+              className="size-40 shrink-0 rounded-xl object-cover ring-1 ring-border"
             />
           )}
           <div className="flex max-w-[65ch] flex-col gap-4 leading-relaxed">

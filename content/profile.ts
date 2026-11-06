@@ -76,6 +76,10 @@ export const profile: Profile = {
       "I moved from web development to AI automation as AI grew. I wanted to explore it as a more creative way of working, and to keep learning. I enjoy directing the work, using AI tools to speed up the building, and checking the results myself. I like everyday pain points that anyone runs into, and I look for an easier way to solve them.",
       "I measure what I build and write it down. On Project Agila I measured the results, graded answers by hand, and recorded the limitations and every change to the plan. Next I want to learn hybrid search and reranking. I would like to join a remote team building AI automation tools, where people work toward the same goal and a mistake is a chance to learn and try another way.",
     ],
+    photo: {
+      src: "/images/about/portrait.webp",
+      alt: "Portrait of Meo Angelo Alcantara in a dark jacket, navy shirt and red patterned tie.",
+    },
     atAGlance: [
       { label: "Location", value: "Surigao City, Philippines" },
       {

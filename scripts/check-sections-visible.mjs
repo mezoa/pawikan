@@ -162,6 +162,7 @@ async function checkPage(send, sessionId, width, height, theme, report) {
   await page("Page.enable");
   await page("Runtime.enable");
   await page("Page.bringToFront");
+  await page("Emulation.setFocusEmulationEnabled", { enabled: true });
   await page("Emulation.setDeviceMetricsOverride", {
     width,
     height,
@@ -200,6 +201,11 @@ async function checkPage(send, sessionId, width, height, theme, report) {
   for (const { id } of sections) {
     await run(`document.getElementById("${id}").scrollIntoView({ block: "start" })`);
     await sleep(700);
+    // A hidden tab stops painting, which freezes a fade partway. That says
+    // nothing about the site, so stop instead of calling the section blank.
+    if ((await run("document.visibilityState")) !== "visible") {
+      throw new Error("The browser hid the test tab, so this result cannot be trusted. Run the check again.");
+    }
     const section = (await run(READ_SECTIONS)).find((item) => item.id === id);
     const scrollY = await run("scrollY");
     const ink = await inkIn(
@@ -240,6 +246,10 @@ async function main() {
       `--remote-debugging-port=${BROWSER_PORT}`,
       `--user-data-dir=${PROFILE}`,
       "--no-first-run",
+      // A fresh profile can open its own dialog, which hides the test tab.
+      "--disable-renderer-backgrounding",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
       "about:blank",
     ],
     { stdio: "ignore" },
