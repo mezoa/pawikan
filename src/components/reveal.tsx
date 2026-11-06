@@ -3,10 +3,12 @@
 import { animate, inView } from "motion";
 import { useEffect, useRef, type ReactNode } from "react";
 
-// Fades content in once as it scrolls into view. The content is always in the
-// page's HTML at full opacity, and this only hides it after the page loads, so
-// it stays readable if JavaScript is slow or off. Anything already on screen,
-// and every visitor who asks for reduced motion, gets no animation at all.
+// Fades content in once as it starts to scroll into view. Nothing is hidden in
+// advance: the content stays at full opacity until the fade plays. If the fade
+// never runs (print, a full-page capture, a tab that is not painting), the
+// content is simply visible. Do not set opacity 0 ahead of the animation.
+// Anything already on screen, and every visitor who asks for reduced motion,
+// gets no animation at all.
 export function Reveal({
   className,
   children,
@@ -22,23 +24,13 @@ export function Reveal({
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (element.getBoundingClientRect().top < window.innerHeight) return;
 
-    element.style.opacity = "0";
-    const stop = inView(
-      element,
-      () => {
-        animate(
-          element,
-          { opacity: [0, 1], y: [12, 0] },
-          { duration: 0.4, ease: "easeOut" },
-        );
-      },
-      { amount: 0.1 },
-    );
-
-    return () => {
-      stop();
-      element.style.opacity = "";
-    };
+    return inView(element, () => {
+      animate(
+        element,
+        { opacity: [0, 1], y: [12, 0] },
+        { duration: 0.4, ease: "easeOut" },
+      );
+    });
   }, []);
 
   return (
