@@ -21,11 +21,18 @@ export type Publication = {
   venue: string;
   year: string;
   doi: string; // full https://doi.org/ address
+  scores: { label: string; value: string; kind: "outcome" }[];
+  scoresNote: string;
+};
+
+export type ProjectLink = {
+  name: string;
+  slug: string; // matches content/projects/<slug>.mdx
 };
 
 export type Skill = {
   name: string;
-  usedIn: string[]; // the projects that used it
+  usedIn: ProjectLink[]; // the projects that used it
 };
 
 export type Profile = {
@@ -46,6 +53,7 @@ export type Profile = {
   experience: ExperienceItem[]; // newest first
   education: EducationItem[];
   publication: Publication;
+  skillsNote: string;
   skills: Skill[];
 };
 
@@ -56,9 +64,8 @@ export function isTodo(value: string) {
   return value.startsWith(TODO);
 }
 
-const TTLO = "TTLO Portfolio Management System";
-const AGILA =
-  "Project Agila (built with Claude Code under my direction and checks)";
+const TTLO: ProjectLink = { name: "TTLO", slug: "ttlo" };
+const AGILA: ProjectLink = { name: "Project Agila", slug: "agila" };
 
 export const profile: Profile = {
   name: "Meo Angelo Alcantara",
@@ -131,7 +138,15 @@ export const profile: Profile = {
       "Proceedings of International Exchange and Innovation Conference on Engineering & Sciences (IEICES) 11, pp. 377-382",
     year: "Oct 2025",
     doi: "https://doi.org/10.5109/7395544",
+    scores: [
+      { label: "SUS score, clients", value: "70.5 / 100", kind: "outcome" },
+      { label: "SUS score, admins", value: "78.0 / 100", kind: "outcome" },
+    ],
+    scoresNote:
+      "These are System Usability Scale (SUS) scores from an ISO 9241-11 evaluation. Both were rated Good.",
   },
+  skillsNote:
+    "Each skill links to the project that used it. Project Agila was built with Claude Code under my direction and checks.",
   skills: [
     { name: "Next.js", usedIn: [TTLO] },
     { name: "HTML, CSS, JS", usedIn: [TTLO] },

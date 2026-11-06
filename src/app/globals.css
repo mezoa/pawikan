@@ -327,3 +327,23 @@
     transition: none;
   }
 }
+
+/* The experience and education timeline: a rail with a short tick per entry. */
+.timeline {
+  border-left: 1px solid var(--border);
+}
+
+.timeline > li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.timeline > li::before {
+  content: "";
+  position: absolute;
+  top: 0.65rem;
+  left: 0;
+  width: 0.875rem;
+  height: 1px;
+  background-color: var(--border);
+}
