@@ -1,29 +1,40 @@
 import type { ReactNode } from "react";
 import { isTodo, profile } from "../../content/profile";
 import { ProjectCard } from "@/components/project-card";
+import { BentoGrid } from "@/components/ui/bento-grid";
 import { getAllProjects } from "@/lib/content/projects";
 
 const linkClass =
   "inline-flex min-h-6 items-center text-primary underline underline-offset-4";
+
+// Bento pattern on the 12-column grid: wide + narrow, then narrow + wide.
+const bentoSpans = [
+  "md:col-span-7",
+  "md:col-span-5",
+  "md:col-span-5",
+  "md:col-span-7",
+];
 
 function Section({
   id,
   label,
   title,
   band = false,
+  stacked = false,
   children,
 }: {
   id: string;
   label: string;
   title: string;
   band?: boolean;
+  stacked?: boolean; // heading above the content, not beside it
   children: ReactNode;
 }) {
   return (
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={`${band ? "peach-band " : ""}grid gap-6 py-14 lg:grid-cols-[14rem_minmax(0,1fr)] dark:py-10`}
+      className={`${band ? "peach-band " : ""}${stacked ? "" : "lg:grid-cols-[14rem_minmax(0,1fr)] "}grid gap-6 py-14 dark:py-10`}
     >
       <div>
         <p className="text-sm text-muted-foreground">{label}</p>
@@ -104,15 +115,18 @@ export default function Home() {
         label="Selected work"
         title="Featured projects"
         band
+        stacked
       >
         {featured.length > 0 && (
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {featured.map((project) => (
-              <li key={project.slug}>
-                <ProjectCard project={project} />
-              </li>
+          <BentoGrid>
+            {featured.map((project, index) => (
+              <ProjectCard
+                key={project.slug}
+                project={project}
+                className={bentoSpans[index % bentoSpans.length]}
+              />
             ))}
-          </ul>
+          </BentoGrid>
         )}
       </Section>
 
