@@ -27,6 +27,21 @@ export type Project = ProjectFrontmatter & {
   sections: ProjectSection[]; // the body, one entry per "## " heading
 };
 
+/** The word shown on the page. "live" would suggest a public service. */
+export const statusLabels: Record<Project["status"], string> = {
+  live: "Released",
+  building: "In progress",
+  delivered: "Delivered",
+  archived: "Archived",
+};
+
+/** Results first, then size. The sort keeps each group in file order. */
+export function outcomesFirst(metrics: Project["metrics"]) {
+  return [...metrics].sort(
+    (a, b) => Number(a.kind === "scope") - Number(b.kind === "scope"),
+  );
+}
+
 /** True if a path such as /images/a.webp is a file in public/. */
 export function publicFileExists(src: string) {
   return fs.existsSync(path.join(process.cwd(), "public", src));

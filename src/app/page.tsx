@@ -11,11 +11,11 @@ import {
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { isTodo, profile } from "../../content/profile";
+import { HeroArt } from "@/components/hero-art";
 import { ProjectCard } from "@/components/project-card";
 import { Reveal } from "@/components/reveal";
 import { ScoreMeter } from "@/components/score-meter";
 import { Tilt } from "@/components/tilt";
-import { BentoGrid } from "@/components/ui/bento-grid";
 import { getAllProjects } from "@/lib/content/projects";
 
 const linkClass =
@@ -31,14 +31,6 @@ const glanceIcons: Record<string, LucideIcon> = {
   Languages,
   "Outside work": Coffee,
 };
-
-// Bento pattern on the 12-column grid: wide + narrow, then narrow + wide.
-const bentoSpans = [
-  "md:col-span-7",
-  "md:col-span-5",
-  "md:col-span-5",
-  "md:col-span-7",
-];
 
 function Section({
   id,
@@ -134,6 +126,7 @@ export default function Home() {
         className="relative isolate pt-24 pb-16 sm:pb-24"
       >
         <div aria-hidden="true" className="wash-top" />
+        <HeroArt />
         <div className="page-frame">
           <h1
             id="hero-heading"
@@ -169,15 +162,15 @@ export default function Home() {
         stacked
       >
         {featured.length > 0 && (
-          <BentoGrid>
-            {featured.map((project, index) => (
-              <ProjectCard
-                key={project.slug}
-                project={project}
-                className={bentoSpans[index % bentoSpans.length]}
-              />
+          // An even count fills two columns and an odd count fills three, so
+          // the grid never leaves an empty slot.
+          <ul
+            className={`grid gap-4 ${featured.length % 2 === 0 ? "md:grid-cols-2" : "lg:grid-cols-3"}`}
+          >
+            {featured.map((project) => (
+              <ProjectCard key={project.slug} project={project} />
             ))}
-          </BentoGrid>
+          </ul>
         )}
       </Section>
 

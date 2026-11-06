@@ -78,6 +78,7 @@
   --sunset-dusk: transparent; /* The dusk purple is for the dark glow only. */
   --wash-strength: 9%;
   --wash-bottom-opacity: 0.55; /* The page is already peach down here, so this field has less room. */
+  --hex-strength: 0.32;
   --line-strength: 45%;
   /* Light mode's page wash, section bands, chips and card shadow. */
   --wash-start: #fff7ed;
@@ -130,6 +131,7 @@
   --sunset-dusk: #7c3aed;
   --wash-strength: 12%;
   --wash-bottom-opacity: 1;
+  --hex-strength: 0.24;
   --line-strength: 80%;
   /* Dark mode: no page wash, plain chips, no card shadow. Bands use the surface colour. */
   --wash-start: #150b0d;
@@ -230,6 +232,75 @@
     height: calc(100% + 4.75rem);
     max-height: 44rem;
   }
+}
+
+/* The hexagon pattern and 3D scene. It sits in empty space and never behind text:
+   above the name on a narrow screen, beside the 65ch text column on a wide one.
+   It is out of the page flow, so it cannot change the hero's layout. The pattern
+   is the amber and rose wash seen through a hexagon mask. */
+.hero-art {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -1;
+  width: 15rem;
+  height: 5rem;
+  pointer-events: none;
+}
+
+.hero-art::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--sunset-amber), var(--sunset-rose));
+  opacity: var(--hex-strength);
+  mask:
+    url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'48.5'%20height%3D'84'%3E%3Cpath%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.5'%20d%3D'M24.25%200%2048.5%2014v28L24.25%2056%200%2042V14zM24.25%2056v28'%2F%3E%3C%2Fsvg%3E"),
+    linear-gradient(to left, white, transparent 90%);
+  mask-composite: intersect;
+  transition: opacity 300ms ease-out;
+}
+
+.hero-art canvas {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+
+@media (min-width: 64rem) {
+  .hero-art {
+    top: 2rem;
+    right: calc(max(0px, (100% - 80rem) / 2) + 2.5rem);
+    bottom: 2rem;
+    left: calc(max(0px, (100% - 80rem) / 2) + 2.5rem + 65ch + 1.5rem);
+    width: auto;
+    height: auto;
+  }
+
+  .hero-art::before {
+    mask:
+      url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width%3D'48.5'%20height%3D'84'%3E%3Cpath%20fill%3D'none'%20stroke%3D'%23000'%20stroke-width%3D'1.5'%20d%3D'M24.25%200%2048.5%2014v28L24.25%2056%200%2042V14zM24.25%2056v28'%2F%3E%3C%2Fsvg%3E"),
+      linear-gradient(to left, white 40%, transparent);
+    mask-composite: intersect;
+  }
+}
+
+@media (min-width: 80rem) {
+  .hero-art canvas {
+    display: block;
+  }
+}
+
+.hero-art.is-live::before {
+  opacity: 0;
+}
+
+.hero-art.is-live canvas {
+  opacity: 1;
 }
 
 /* Lower left, in the empty space the footer keeps below its text. */
@@ -380,6 +451,23 @@
 
 @media (prefers-reduced-motion: reduce) {
   .card-surface::before {
+    transition: none;
+  }
+}
+
+/* The arrow in a project card's footer nudges toward the case study. */
+.card-arrow {
+  transition: transform 200ms ease-out;
+}
+
+@media (hover: hover) {
+  .sunset-edge:hover .card-arrow {
+    transform: translateX(4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-arrow {
     transition: none;
   }
 }

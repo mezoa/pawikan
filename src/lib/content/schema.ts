@@ -48,7 +48,7 @@ export const projectSchema = z.object({
   summary: z.string().min(20).max(200), // one-line problem statement for the card
   date: z.coerce.date(),
   period: z.string().min(3).optional(), // "Oct 15 to Nov 2, 2026"; falls back to the date
-  status: z.enum(["live", "building", "archived"]),
+  status: z.enum(["live", "building", "delivered", "archived"]),
   published: z.boolean().default(true), // false = hidden everywhere
   featured: z.boolean().default(false),
   order: z.number().int().default(100), // smaller shows first

@@ -7,19 +7,18 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { MetricCard } from "@/components/metric-card";
 import { componentsFor, Figure } from "@/components/mdx-components";
-import { getProject, getSlugs, type Project } from "@/lib/content/projects";
+import {
+  getProject,
+  getSlugs,
+  outcomesFirst,
+  statusLabels,
+  type Project,
+} from "@/lib/content/projects";
 
 // Only the addresses from generateStaticParams exist. Anything else is a 404.
 export const dynamicParams = false;
 
 const KEY_NUMBERS = 4;
-
-// The word shown on the page. "live" would suggest a public service.
-const statusLabels: Record<Project["status"], string> = {
-  live: "Released",
-  building: "In progress",
-  archived: "Archived",
-};
 
 const linkClass =
   "inline-flex min-h-6 items-center text-primary underline underline-offset-4";
@@ -88,10 +87,7 @@ export default async function ProjectPage({
     Boolean(link.href),
   );
 
-  // Results first, then size. The sort keeps each group in file order.
-  const keyNumbers = [...project.metrics]
-    .sort((a, b) => Number(a.kind === "scope") - Number(b.kind === "scope"))
-    .slice(0, KEY_NUMBERS);
+  const keyNumbers = outcomesFirst(project.metrics).slice(0, KEY_NUMBERS);
 
   const headings = project.sections.filter((section) => section.heading);
 
