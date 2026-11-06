@@ -1,6 +1,6 @@
 # CLAUDE.md: Project Pawikan
 
-Personal portfolio website for Eo (Meo Angelo Alcantara), a junior AI & automation engineer in Butuan City, Philippines. Goal: show employers who he is, his projects, and real measured proof. Full spec: `docs/PRD.md`. Day-by-day steps: `docs/RUNBOOK.md`.
+Personal portfolio website for Eo (Meo Angelo Alcantara), a full-stack developer building AI automation in Surigao City, Philippines. Goal: show employers who he is, his projects, and real measured proof. Full spec: `docs/PRD.md`. Day-by-day steps: `docs/RUNBOOK.md`.
 
 ## Stack
 - Next.js (App Router) + TypeScript (strict) + Tailwind CSS + shadcn/ui
@@ -46,11 +46,13 @@ Personal portfolio website for Eo (Meo Angelo Alcantara), a junior AI & automati
 - Motion: hover 150 to 300 ms, reveals up to 400 ms, nothing flashes more than 3 times a second. Respect `prefers-reduced-motion` everywhere (Motion's `useReducedMotion`, or CSS media query).
 - No heavy 3D or canvas effects. Decorative icons and graphics get `aria-hidden="true"`. Images need alt text.
 - Server Components by default. Add `"use client"` only where needed (theme toggle, animations).
+- Colour: the "sunset" palette in `docs/PRD.md` section 6.3. Orange (`--primary`, `--ring`) is only for things you can act on. Amber, rose and purple are decoration only. No gradient behind body text, no gradient-filled text.
 - Use the `frontend-design` skill for visual decisions. Avoid generic template-looking layouts.
 
 ## Working agreement
 - Make small changes. After each, run `npm run lint` and `npm run build`.
 - Ask before installing any new package, skill or MCP server, and say what it is and who made it.
+- If a change departs from `docs/PRD.md`, tell Eo and add a row to `docs/PRD_DEVIATIONS.md`. Never change the PRD silently.
 - Do not turn on auto-approval. Do not use `--dangerously-skip-permissions`.
 - Do not run or suggest commands that delete files outside this project folder.
 - Never put secrets in the repo. There should be none; if you see one, stop and tell Eo.

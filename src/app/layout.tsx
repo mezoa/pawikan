@@ -16,9 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Meo Angelo Alcantara | Junior AI & Automation Engineer",
+  title: "Meo Angelo Alcantara | Full-stack developer building AI automation",
   description:
-    "I build practical automation and AI tools. Based in Butuan City, Philippines. Open to remote roles.",
+    "Full-stack developer building AI automation. Based in Surigao City, Philippines. Open to remote roles and private-sector software development roles.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

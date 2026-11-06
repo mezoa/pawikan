@@ -49,24 +49,33 @@
 }
 
 :root {
-  --background: #fafafa;
-  --foreground: #18181b;
+  /* Sunset palette, light mode. Values come from PRD section 6.3. */
+  --background: #fff7ed;
+  --foreground: #2b1408;
   --card: #ffffff;
-  --card-foreground: #18181b;
+  --card-foreground: #2b1408;
   --popover: #ffffff;
-  --popover-foreground: #18181b;
-  --primary: #0f766e;
+  --popover-foreground: #2b1408;
+  --primary: #b93d08;
   --primary-foreground: #ffffff;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #18181b;
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
+  /* Not in the PRD table: a warm tint, checked with the same contrast formula. */
+  --secondary: #fdecdc;
+  --secondary-foreground: #2b1408;
+  --muted: #fdecdc;
+  --muted-foreground: #7a4a30;
+  --accent: #fdecdc;
+  --accent-foreground: #2b1408;
   --destructive: oklch(0.577 0.245 27.325);
-  --border: #8a8a93;
-  --input: #8a8a93;
-  --ring: #0f766e;
+  --border: #8f5f45;
+  --input: #8f5f45;
+  --ring: #b93d08;
+  /* Decoration only. Never use these for text, links or anything with meaning. */
+  --sunset-amber: #f59e0b;
+  --sunset-orange: #ea580c;
+  --sunset-rose: #e11d48;
+  --sunset-dusk: transparent; /* The dusk purple is for the dark glow only. */
+  --glow-strength: 16%;
+  --line-strength: 45%;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -84,24 +93,33 @@
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #f4f4f5;
-  --card: #18181b;
-  --card-foreground: #f4f4f5;
-  --popover: #18181b;
-  --popover-foreground: #f4f4f5;
-  --primary: #2dd4bf;
-  --primary-foreground: #09090b;
-  --secondary: #27272a;
-  --secondary-foreground: #f4f4f5;
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-  --accent: #27272a;
-  --accent-foreground: #f4f4f5;
+  /* Sunset palette, dark mode. Values come from PRD section 6.3. */
+  --background: #150b0d;
+  --foreground: #fff1e6;
+  --card: #211318;
+  --card-foreground: #fff1e6;
+  --popover: #211318;
+  --popover-foreground: #fff1e6;
+  --primary: #fb923c;
+  --primary-foreground: #1c0d05;
+  /* Not in the PRD table: a warm tint, checked with the same contrast formula. */
+  --secondary: #2e1b21;
+  --secondary-foreground: #fff1e6;
+  --muted: #2e1b21;
+  --muted-foreground: #d1ae9d;
+  --accent: #2e1b21;
+  --accent-foreground: #fff1e6;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: #71717a;
-  --input: #71717a;
-  --ring: #2dd4bf;
+  --border: #a07d6c;
+  --input: #a07d6c;
+  --ring: #fb923c;
+  /* Decoration only. Never use these for text, links or anything with meaning. */
+  --sunset-amber: #fbbf24;
+  --sunset-orange: #f97316;
+  --sunset-rose: #f43f5e;
+  --sunset-dusk: #7c3aed;
+  --glow-strength: 24%;
+  --line-strength: 80%;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -123,6 +141,8 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Lets the hero glow run past the page frame without a sideways scrollbar. */
+    overflow-x: clip;
   }
   html {
     @apply font-sans;
@@ -146,4 +166,90 @@
 /* <main> takes focus from the skip link, but it is not a control, so no ring. */
 [tabindex="-1"]:focus-visible {
   outline: none;
+}
+
+/*
+ * Sunset decoration. These three classes are the only places the --sunset
+ * tokens are used. All of it is static except the card edge, which fades in
+ * when a person hovers or focuses the card.
+ */
+
+/* A half-sun resting on the horizon line at the bottom of the hero. On a phone
+   it fits inside the hero's empty bottom padding, so it never sits behind text. */
+.hero-glow {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  width: 14rem;
+  height: 3.5rem;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse farthest-side at 50% 100%,
+    color-mix(in srgb, var(--sunset-amber) var(--glow-strength), transparent) 0%,
+    color-mix(in srgb, var(--sunset-orange) calc(var(--glow-strength) * 0.75), transparent) 35%,
+    color-mix(in srgb, var(--sunset-rose) calc(var(--glow-strength) * 0.5), transparent) 62%,
+    color-mix(in srgb, var(--sunset-dusk) calc(var(--glow-strength) * 0.4), transparent) 82%,
+    transparent 100%
+  );
+}
+
+/* On a wide screen it starts after the 65ch text column, so the bio stays clear. */
+@media (min-width: 64rem) {
+  .hero-glow {
+    left: calc(65ch + 1.5rem);
+    right: -8rem;
+    width: auto;
+    height: 20rem;
+  }
+}
+
+/* A thin divider line. */
+.sunset-rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--sunset-amber) var(--line-strength), transparent),
+    color-mix(in srgb, var(--sunset-orange) var(--line-strength), transparent),
+    color-mix(in srgb, var(--sunset-rose) var(--line-strength), transparent),
+    transparent
+  );
+}
+
+/* A card outline that passes 3:1, plus a sunset edge on hover and keyboard focus.
+   The card needs position: relative. */
+.sunset-edge {
+  --tw-ring-color: var(--border);
+}
+
+.sunset-edge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    var(--sunset-amber),
+    var(--sunset-orange),
+    var(--sunset-rose)
+  );
+  mask:
+    linear-gradient(white 0 0) content-box exclude,
+    linear-gradient(white 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease;
+}
+
+.sunset-edge:hover::before,
+.sunset-edge:focus-within::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sunset-edge::before {
+    transition: none;
+  }
 }

@@ -1,4 +1,6 @@
+import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
@@ -44,6 +46,13 @@ export default async function ProjectPage({
   return (
     <article className="py-12">
       <header className="flex max-w-[65ch] flex-col gap-5">
+        <Link
+          href="/"
+          className="inline-flex min-h-6 items-center gap-2 self-start rounded-sm text-muted-foreground transition-colors duration-200 hover:text-primary motion-reduce:transition-none"
+        >
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          Back to home
+        </Link>
         <h1 className="text-4xl font-semibold tracking-tight">
           {project.title}
         </h1>
@@ -89,6 +98,8 @@ export default async function ProjectPage({
           </p>
         )}
       </header>
+
+      <div aria-hidden="true" className="sunset-rule mt-10 max-w-[65ch]" />
 
       <div className="mt-6 max-w-[65ch]">
         <MDXRemote

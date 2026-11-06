@@ -6,7 +6,7 @@ import type { Project } from "@/lib/content/projects";
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
-    <Card className="relative h-full text-base transition-colors duration-200 hover:bg-accent motion-reduce:transition-none">
+    <Card className="sunset-edge relative h-full text-base">
       <CardHeader>
         <h3 className="text-lg font-semibold">
           {/* The ::after layer stretches this link over the whole card. */}
