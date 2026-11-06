@@ -39,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             Skip to content
           </a>
           <SiteHeader />
-          <main id="main" tabIndex={-1} className="page-frame flex-1">
+          <main id="main" tabIndex={-1} className="flex-1">
             {children}
           </main>
           <SiteFooter />

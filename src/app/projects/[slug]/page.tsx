@@ -46,68 +46,70 @@ export default async function ProjectPage({
   return (
     <article className="relative isolate pt-24 pb-12 lg:pt-12">
       <div aria-hidden="true" className="wash-top" />
-      <header className="flex max-w-[65ch] flex-col gap-5">
-        <Link
-          href="/"
-          className="inline-flex min-h-6 items-center gap-2 self-start rounded-sm text-muted-foreground transition-colors duration-200 hover:text-primary motion-reduce:transition-none"
-        >
-          <ArrowLeft aria-hidden="true" className="size-4" />
-          Back to home
-        </Link>
-        <h1 className="text-4xl font-semibold tracking-tight">
-          {project.title}
-        </h1>
-        <p className="text-muted-foreground">{project.role}</p>
+      <div className="page-frame">
+        <header className="flex max-w-[65ch] flex-col gap-5">
+          <Link
+            href="/"
+            className="inline-flex min-h-6 items-center gap-2 self-start rounded-sm text-muted-foreground transition-colors duration-200 hover:text-primary motion-reduce:transition-none"
+          >
+            <ArrowLeft aria-hidden="true" className="size-4" />
+            Back to home
+          </Link>
+          <h1 className="text-4xl font-semibold tracking-tight">
+            {project.title}
+          </h1>
+          <p className="text-muted-foreground">{project.role}</p>
 
-        <ul className="flex flex-wrap gap-1.5" aria-label="Tech stack">
-          {project.techStack.map((tech) => (
-            <li key={tech}>
-              <Badge variant="secondary">{tech}</Badge>
-            </li>
-          ))}
-        </ul>
-
-        <ul className="flex flex-col gap-3" aria-label="Metrics">
-          {project.metrics.map((metric) => (
-            <li key={metric.label}>
-              <MetricChip metric={metric} />
-              {metric.note && (
-                <p className="mt-1 text-muted-foreground">{metric.note}</p>
-              )}
-            </li>
-          ))}
-        </ul>
-
-        {links.length > 0 && (
-          <ul className="flex flex-wrap gap-4" aria-label="Project links">
-            {links.map((link) => (
-              <li key={link.label}>
-                <a
-                  href={link.href}
-                  className="inline-flex min-h-6 items-center text-primary underline underline-offset-4"
-                >
-                  {link.label}
-                </a>
+          <ul className="flex flex-wrap gap-1.5" aria-label="Tech stack">
+            {project.techStack.map((tech) => (
+              <li key={tech}>
+                <Badge variant="secondary">{tech}</Badge>
               </li>
             ))}
           </ul>
-        )}
 
-        {project.privacyNote && (
-          <p className="border-l-2 border-border pl-4 text-muted-foreground">
-            {project.privacyNote}
-          </p>
-        )}
-      </header>
+          <ul className="flex flex-col gap-3" aria-label="Metrics">
+            {project.metrics.map((metric) => (
+              <li key={metric.label}>
+                <MetricChip metric={metric} />
+                {metric.note && (
+                  <p className="mt-1 text-muted-foreground">{metric.note}</p>
+                )}
+              </li>
+            ))}
+          </ul>
 
-      <div aria-hidden="true" className="sunset-rule mt-10" />
+          {links.length > 0 && (
+            <ul className="flex flex-wrap gap-4" aria-label="Project links">
+              {links.map((link) => (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    className="inline-flex min-h-6 items-center text-primary underline underline-offset-4"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          )}
 
-      <div className="mt-6 max-w-[65ch]">
-        <MDXRemote
-          source={project.body}
-          components={mdxComponents}
-          options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
-        />
+          {project.privacyNote && (
+            <p className="border-l-2 border-border pl-4 text-muted-foreground">
+              {project.privacyNote}
+            </p>
+          )}
+        </header>
+
+        <div aria-hidden="true" className="sunset-rule mt-10" />
+
+        <div className="mt-6 max-w-[65ch]">
+          <MDXRemote
+            source={project.body}
+            components={mdxComponents}
+            options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
+          />
+        </div>
       </div>
     </article>
   );

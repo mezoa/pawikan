@@ -131,10 +131,10 @@
   --wash-strength: 12%;
   --wash-bottom-opacity: 1;
   --line-strength: 80%;
-  /* Dark mode stays flat: no page wash, no bands, plain chips, no card shadow. */
+  /* Dark mode: no page wash, plain chips, no card shadow. Bands use the surface colour. */
   --wash-start: #150b0d;
   --wash-end: #150b0d;
-  --band: transparent;
+  --band: #211318;
   --chip: transparent;
   --chip-foreground: #d1ae9d;
   --card-shadow: 0 0 transparent;
@@ -161,7 +161,7 @@
     @apply text-foreground;
     /* Painted on the body so the wash runs once down the whole page. */
     background-image: linear-gradient(var(--wash-start), var(--wash-end));
-    /* Lets the bands and wash run past the page frame without a sideways scrollbar. */
+    /* Lets the washes run past the page frame without a sideways scrollbar. */
     overflow-x: clip;
   }
   html {
@@ -169,9 +169,10 @@
   }
 }
 
-/* The page frame: same width and side padding for header, main and footer. */
+/* The page frame: same width and side padding for the header, the footer and
+   the inside of every section. Sections themselves run edge to edge. */
 @utility page-frame {
-  @apply mx-auto w-full max-w-5xl px-6;
+  @apply mx-auto w-full max-w-7xl px-6 lg:px-10;
 }
 
 /*
@@ -209,7 +210,7 @@
 /* Top right. On a narrow screen it stays inside the empty space above the heading. */
 .wash-top {
   top: 0;
-  right: calc((100% - 100vw) / 2);
+  right: 0;
   width: 22rem;
   height: 5rem;
   background:
@@ -223,7 +224,8 @@
 @media (min-width: 64rem) {
   .wash-top {
     top: -4.75rem;
-    left: calc(65ch + 1.5rem);
+    /* The frame's left edge, its padding, the 65ch text column, then a gap. */
+    left: calc(max(0px, (100% - 80rem) / 2) + 2.5rem + 65ch + 1.5rem);
     width: auto;
     height: calc(100% + 4.75rem);
     max-height: 44rem;
@@ -272,17 +274,16 @@
   background: linear-gradient(90deg, var(--sunset-amber), var(--sunset-rose));
 }
 
-/* A full-width band behind a section. The shadow carries the colour past the
-   page frame and the clip keeps it from spilling above or below. */
-.peach-band {
+/* An edge-to-edge band behind a section. */
+.section-band {
   background-color: var(--band);
-  box-shadow: 0 0 0 100vmax var(--band);
-  clip-path: inset(0 -100vmax);
 }
 
-/* A card outline that passes 3:1, a warm shadow in light mode, and a sunset edge on hover and keyboard focus.
-   The card needs position: relative. */
-.sunset-edge {
+/* A card outline that passes 3:1 and a warm shadow in light mode. Use .quiet-card
+   for cards you cannot click. .sunset-edge adds a sunset edge on hover and
+   keyboard focus, and needs position: relative. */
+.sunset-edge,
+.quiet-card {
   --tw-ring-color: var(--border);
   --tw-shadow: var(--card-shadow);
 }
@@ -328,7 +329,8 @@
   }
 }
 
-/* The experience and education timeline: a rail with a short tick per entry. */
+/* The experience and education timeline: a rail with a short tick per entry.
+   Vertical on small screens, horizontal from 64rem. */
 .timeline {
   border-left: 1px solid var(--border);
 }
@@ -346,4 +348,23 @@
   width: 0.875rem;
   height: 1px;
   background-color: var(--border);
+}
+
+@media (min-width: 64rem) {
+  .timeline {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+
+  .timeline > li {
+    padding-top: 1.5rem;
+    padding-right: 1.5rem;
+    padding-left: 0;
+  }
+
+  .timeline > li::before {
+    top: 0;
+    width: 1px;
+    height: 0.875rem;
+  }
 }

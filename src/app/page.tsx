@@ -1,9 +1,10 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { isTodo, profile } from "../../content/profile";
-import { MetricChip } from "@/components/metric-chip";
 import { ProjectCard } from "@/components/project-card";
 import { Reveal } from "@/components/reveal";
+import { ScoreMeter } from "@/components/score-meter";
 import { BentoGrid } from "@/components/ui/bento-grid";
 import { getAllProjects } from "@/lib/content/projects";
 
@@ -24,6 +25,7 @@ function Section({
   title,
   band = false,
   stacked = false,
+  aside,
   children,
 }: {
   id: string;
@@ -31,26 +33,41 @@ function Section({
   title: string;
   band?: boolean;
   stacked?: boolean; // heading above the content, not beside it
+  aside?: ReactNode; // a second column; the heading and content share the first
   children: ReactNode;
 }) {
+  const heading = (
+    <div>
+      <p className="text-sm text-muted-foreground">{label}</p>
+      <h2 id={`${id}-heading`} className="mt-1 text-xl font-semibold">
+        {title}
+      </h2>
+      <div aria-hidden="true" className="sunset-bar mt-3" />
+    </div>
+  );
+
   return (
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className={`${band ? "peach-band " : ""}py-14 dark:py-10`}
+      className={`${band ? "section-band " : ""}py-14 lg:py-20`}
     >
-      <Reveal
-        className={`${stacked ? "" : "lg:grid-cols-[14rem_minmax(0,1fr)] "}grid gap-6`}
-      >
-        <div>
-          <p className="text-sm text-muted-foreground">{label}</p>
-          <h2 id={`${id}-heading`} className="mt-1 text-xl font-semibold">
-            {title}
-          </h2>
-          <div aria-hidden="true" className="sunset-bar mt-3" />
-        </div>
-        <div className="min-w-0">{children}</div>
-      </Reveal>
+      {aside ? (
+        <Reveal className="page-frame grid gap-10 lg:grid-cols-12 lg:gap-x-12">
+          <div className="flex min-w-0 flex-col gap-6 lg:col-span-7">
+            {heading}
+            {children}
+          </div>
+          <div className="min-w-0 lg:col-span-5">{aside}</div>
+        </Reveal>
+      ) : (
+        <Reveal
+          className={`${stacked ? "" : "lg:grid-cols-[14rem_minmax(0,1fr)] "}page-frame grid gap-6`}
+        >
+          {heading}
+          <div className="min-w-0">{children}</div>
+        </Reveal>
+      )}
     </section>
   );
 }
@@ -85,7 +102,7 @@ function ContactLinks({ label }: { label: string }) {
 
 export default function Home() {
   const featured = getAllProjects().filter((project) => project.featured);
-  const { name, publication } = profile;
+  const { name, publication, about } = profile;
   const lastSpace = name.lastIndexOf(" ");
 
   return (
@@ -96,24 +113,26 @@ export default function Home() {
         className="relative isolate pt-24 pb-16 sm:pb-24"
       >
         <div aria-hidden="true" className="wash-top" />
-        <h1
-          id="hero-heading"
-          className="text-[clamp(3rem,12vw,7.5rem)] leading-none font-semibold tracking-tight"
-        >
-          <span className="block">{name.slice(0, lastSpace)}</span>{" "}
-          <span className="block">{name.slice(lastSpace + 1)}</span>
-        </h1>
-        <p className="mt-8 text-xl font-medium sm:text-2xl">
-          {profile.roleLine}
-        </p>
-        <p className="mt-4 max-w-[65ch] leading-relaxed text-muted-foreground">
-          {profile.bio}
-        </p>
-        <p className="mt-4 max-w-[65ch] leading-relaxed text-muted-foreground">
-          {profile.location}. {profile.availability}
-        </p>
-        <div className="mt-6">
-          <ContactLinks label="Profile links" />
+        <div className="page-frame">
+          <h1
+            id="hero-heading"
+            className="text-[clamp(3rem,12vw,7.5rem)] leading-none font-semibold tracking-tight"
+          >
+            <span className="block">{name.slice(0, lastSpace)}</span>{" "}
+            <span className="block">{name.slice(lastSpace + 1)}</span>
+          </h1>
+          <p className="mt-8 text-xl font-medium sm:text-2xl">
+            {profile.roleLine}
+          </p>
+          <p className="mt-4 max-w-[65ch] leading-relaxed text-muted-foreground">
+            {profile.bio}
+          </p>
+          <p className="mt-4 max-w-[65ch] leading-relaxed text-muted-foreground">
+            {profile.location}. {profile.availability}
+          </p>
+          <div className="mt-6">
+            <ContactLinks label="Profile links" />
+          </div>
         </div>
       </section>
 
@@ -137,23 +156,41 @@ export default function Home() {
         )}
       </Section>
 
-      <Section id="about" label="Background" title="About">
-        <div className="flex max-w-[65ch] flex-col gap-8">
-          <div className="flex flex-col gap-4 leading-relaxed">
-            {profile.about.paragraphs.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
-          </div>
-          <div>
+      <Section
+        id="about"
+        label="Background"
+        title="About"
+        aside={
+          <>
             <h3 className="text-lg font-semibold">At a glance</h3>
-            <dl className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-[7rem_minmax(0,1fr)]">
-              {profile.about.atAGlance.map(({ label, value }) => (
-                <div key={label} className="contents">
-                  <dt className="text-muted-foreground">{label}</dt>
-                  <dd className="mb-2 sm:mb-0">{value}</dd>
+            <dl className="mt-3 grid gap-3 sm:grid-cols-2">
+              {about.atAGlance.map(({ label, value }) => (
+                <div
+                  key={label}
+                  className="quiet-card rounded-xl bg-card p-3 text-card-foreground ring-1 sm:last:col-span-2"
+                >
+                  <dt className="text-sm text-muted-foreground">{label}</dt>
+                  <dd className="mt-1">{value}</dd>
                 </div>
               ))}
             </dl>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-6 sm:flex-row">
+          {about.photo && (
+            <Image
+              src={about.photo.src}
+              alt={about.photo.alt}
+              width={160}
+              height={160}
+              className="size-40 shrink-0 rounded-xl object-cover"
+            />
+          )}
+          <div className="flex max-w-[65ch] flex-col gap-4 leading-relaxed">
+            {about.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
           </div>
         </div>
       </Section>
@@ -163,8 +200,9 @@ export default function Home() {
         label="Career so far"
         title="Experience and education"
         band
+        stacked
       >
-        <ol className="timeline flex max-w-[65ch] flex-col gap-8">
+        <ol className="timeline flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:gap-0">
           {profile.experience.map((item) => (
             <li key={`${item.role}-${item.period}`}>
               <p className="font-mono text-sm text-muted-foreground">
@@ -187,29 +225,34 @@ export default function Home() {
         </ol>
       </Section>
 
-      <Section id="publication" label="Research" title="Publication">
-        <article className="sunset-edge relative flex max-w-[65ch] flex-col gap-4 overflow-hidden rounded-xl bg-card p-4 text-card-foreground ring-1">
-          <h3 className="text-lg font-semibold">{publication.title}</h3>
-          <p className="text-muted-foreground">
-            {publication.venue}, {publication.year}
-          </p>
-          <ul className="flex flex-wrap gap-2" aria-label="Usability scores">
-            {publication.scores.map((score) => (
-              <li key={score.label}>
-                <MetricChip metric={score} />
+      <Section id="publication" label="Research" title="Publication" stacked>
+        <article className="sunset-edge relative grid gap-8 overflow-hidden rounded-xl bg-card p-5 text-card-foreground ring-1 lg:grid-cols-12 lg:gap-x-12 lg:p-8">
+          <div className="flex flex-col gap-4 lg:col-span-5">
+            <h3 className="text-lg font-semibold">{publication.title}</h3>
+            <p className="text-muted-foreground">
+              {publication.venue}, {publication.year}
+            </p>
+            <p className="leading-relaxed">{publication.scoresNote}</p>
+            <p>
+              {/* The ::after layer stretches this link over the whole card. */}
+              <a
+                href={publication.doi}
+                className={`${linkClass} after:absolute after:inset-0`}
+              >
+                Read the paper (DOI)
+              </a>
+            </p>
+          </div>
+          <ul
+            className="flex min-w-0 flex-col gap-8 lg:col-span-7"
+            aria-label="Usability scores"
+          >
+            {publication.scores.map(({ label, score, grade }) => (
+              <li key={label}>
+                <ScoreMeter label={label} score={score} grade={grade} />
               </li>
             ))}
           </ul>
-          <p className="leading-relaxed">{publication.scoresNote}</p>
-          <p>
-            {/* The ::after layer stretches this link over the whole card. */}
-            <a
-              href={publication.doi}
-              className={`${linkClass} after:absolute after:inset-0`}
-            >
-              Read the paper (DOI)
-            </a>
-          </p>
         </article>
       </Section>
 
@@ -221,7 +264,7 @@ export default function Home() {
       >
         <div className="flex flex-col gap-4">
           <p className="max-w-[65ch] leading-relaxed">{profile.skillsNote}</p>
-          <ul className="grid gap-x-10 gap-y-1 md:grid-cols-2">
+          <ul className="grid gap-x-10 gap-y-1 md:grid-cols-2 xl:grid-cols-3">
             {profile.skills.map((skill) => (
               <li
                 key={skill.name}

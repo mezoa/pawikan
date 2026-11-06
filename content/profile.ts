@@ -21,7 +21,13 @@ export type Publication = {
   venue: string;
   year: string;
   doi: string; // full https://doi.org/ address
-  scores: { label: string; value: string; kind: "outcome" }[];
+  scores: {
+    label: string;
+    value: string;
+    score: number; // the same score as a number, for the meter
+    grade: string;
+    kind: "outcome";
+  }[];
   scoresNote: string;
 };
 
@@ -41,6 +47,7 @@ export type Profile = {
   bio: string; // two sentences
   about: {
     paragraphs: string[]; // three short paragraphs
+    photo?: { src: string; alt: string }; // square, no location data; leave out until the file exists
     atAGlance: { label: string; value: string }[];
   };
   location: string; // city and country only
@@ -139,8 +146,20 @@ export const profile: Profile = {
     year: "Oct 2025",
     doi: "https://doi.org/10.5109/7395544",
     scores: [
-      { label: "SUS score, clients", value: "70.5 / 100", kind: "outcome" },
-      { label: "SUS score, admins", value: "78.0 / 100", kind: "outcome" },
+      {
+        label: "SUS score, clients",
+        value: "70.5 / 100",
+        score: 70.5,
+        grade: "Grade B, rated Good",
+        kind: "outcome",
+      },
+      {
+        label: "SUS score, admins",
+        value: "78.0 / 100",
+        score: 78.0,
+        grade: "Grade B, rated Good",
+        kind: "outcome",
+      },
     ],
     scoresNote:
       "These are System Usability Scale (SUS) scores from an ISO 9241-11 evaluation. Both were rated Good.",
