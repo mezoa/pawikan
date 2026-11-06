@@ -1,3 +1,6 @@
+import { ProjectCard } from "@/components/project-card";
+import { getAllProjects } from "@/lib/content/projects";
+
 const sections = [
   { id: "projects", title: "Featured projects" },
   { id: "about", title: "About" },
@@ -7,6 +10,8 @@ const sections = [
 ];
 
 export default function Home() {
+  const featured = getAllProjects().filter((project) => project.featured);
+
   return (
     <>
       <section id="hero" aria-labelledby="hero-heading" className="py-16 sm:py-24">
@@ -37,6 +42,15 @@ export default function Home() {
           <h2 id={`${id}-heading`} className="text-xl font-semibold">
             {title}
           </h2>
+          {id === "projects" && featured.length > 0 && (
+            <ul className="grid gap-4 sm:grid-cols-2">
+              {featured.map((project) => (
+                <li key={project.slug}>
+                  <ProjectCard project={project} />
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
       ))}
     </>

@@ -6,7 +6,7 @@ Personal portfolio website for Eo (Meo Angelo Alcantara), a junior AI & automati
 - Next.js (App Router) + TypeScript (strict) + Tailwind CSS + shadcn/ui
 - Content: one MDX file per project in `content/projects/`, loaded by a small custom loader (`gray-matter` + Zod + `next-mdx-remote/rsc`)
 - UI: Magic UI (bento grid), Motion (animation), next-themes (dark/light), lucide-react (icons)
-- Fonts: Geist Sans + Geist Mono (`geist` npm package)
+- Fonts: Geist Sans + Geist Mono (loaded through `next/font/google`)
 - Hosting: Vercel free plan. Package manager: npm
 - No database, no backend, no CMS, no login, no live AI demo (v1)
 
@@ -37,6 +37,7 @@ Personal portfolio website for Eo (Meo Angelo Alcantara), a junior AI & automati
 - CSU CORE content is limited to what is in `docs/csu-core-portfolio-factsheet.md`. No screenshots, code, security or server settings, names, handover file names, or legal-compliance claims.
 - Never add a phone number, home address, ID number or birth date anywhere.
 - Link the TTLO paper by DOI only (`https://doi.org/10.5109/7395544`). Do not re-host the PDF.
+- Deploy only by git push to GitHub (Vercel builds from there). Never run the vercel CLI or any upload command from this computer while content/projects/csu-core.mdx exists.
 
 ## Design rules
 - Dark by default with a light option. Colours come from CSS variables (tokens in `src/app/globals.css`), never hard-coded in components.
