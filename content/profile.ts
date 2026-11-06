@@ -31,14 +31,9 @@ export type Publication = {
   scoresNote: string;
 };
 
-export type ProjectLink = {
+export type SkillGroup = {
   name: string;
-  slug: string; // matches content/projects/<slug>.mdx
-};
-
-export type Skill = {
-  name: string;
-  usedIn: ProjectLink[]; // the projects that used it
+  skills: string[]; // only skills profile-facts.md shows in use
 };
 
 export type Profile = {
@@ -61,7 +56,7 @@ export type Profile = {
   education: EducationItem[];
   publication: Publication;
   skillsNote: string;
-  skills: Skill[];
+  skillGroups: SkillGroup[];
 };
 
 /** Marks a value Eo still has to fill in. The site never turns these into links. */
@@ -70,9 +65,6 @@ const TODO = "TODO:";
 export function isTodo(value: string) {
   return value.startsWith(TODO);
 }
-
-const TTLO: ProjectLink = { name: "TTLO", slug: "ttlo" };
-const AGILA: ProjectLink = { name: "Project Agila", slug: "agila" };
 
 export const profile: Profile = {
   name: "Meo Angelo Alcantara",
@@ -165,19 +157,17 @@ export const profile: Profile = {
       "These are System Usability Scale (SUS) scores from an ISO 9241-11 evaluation. Both were rated Good.",
   },
   skillsNote:
-    "Each skill links to the project that used it. Project Agila was built with Claude Code under my direction and checks.",
-  skills: [
-    { name: "Next.js", usedIn: [TTLO] },
-    { name: "HTML, CSS, JS", usedIn: [TTLO] },
-    { name: "PostgreSQL", usedIn: [TTLO, AGILA] },
-    { name: "Python", usedIn: [AGILA] },
-    { name: "FastAPI", usedIn: [AGILA] },
-    { name: "pgvector", usedIn: [AGILA] },
-    { name: "Local LLMs (Ollama)", usedIn: [AGILA] },
-    { name: "n8n", usedIn: [AGILA] },
-    { name: "discord.py", usedIn: [AGILA] },
-    { name: "Docker", usedIn: [AGILA] },
-    { name: "GitHub Actions", usedIn: [AGILA] },
-    { name: "gitleaks", usedIn: [AGILA] },
+    "Project Agila was built with Claude Code under my direction and checks.",
+  skillGroups: [
+    { name: "Frontend", skills: ["Next.js", "HTML, CSS, JS"] },
+    {
+      name: "Backend and data",
+      skills: ["Python", "FastAPI", "PostgreSQL", "pgvector"],
+    },
+    {
+      name: "AI and automation",
+      skills: ["Local LLMs (Ollama)", "n8n", "discord.py"],
+    },
+    { name: "Tools", skills: ["Docker", "GitHub Actions", "gitleaks"] },
   ],
 };

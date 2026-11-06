@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { isTodo, profile } from "../../content/profile";
 import { ProjectCard } from "@/components/project-card";
@@ -29,7 +28,7 @@ function Section({
   children,
 }: {
   id: string;
-  label: string;
+  label?: string;
   title: string;
   band?: boolean;
   stacked?: boolean; // heading above the content, not beside it
@@ -38,7 +37,7 @@ function Section({
 }) {
   const heading = (
     <div>
-      <p className="text-sm text-muted-foreground">{label}</p>
+      {label && <p className="text-sm text-muted-foreground">{label}</p>}
       <h2 id={`${id}-heading`} className="mt-1 text-xl font-semibold">
         {title}
       </h2>
@@ -256,36 +255,31 @@ export default function Home() {
         </article>
       </Section>
 
-      <Section
-        id="skills"
-        label="Where I used them"
-        title="Skills in context"
-        band
-      >
-        <div className="flex flex-col gap-4">
-          <p className="max-w-[65ch] leading-relaxed">{profile.skillsNote}</p>
-          <ul className="grid gap-x-10 gap-y-1 md:grid-cols-2 xl:grid-cols-3">
-            {profile.skills.map((skill) => (
-              <li
-                key={skill.name}
-                className="flex flex-wrap items-baseline justify-between gap-x-4"
+      <Section id="skills" title="Skills" band>
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4 lg:gap-3">
+            {profile.skillGroups.map((group) => (
+              <div
+                key={group.name}
+                className="flex flex-col gap-2 lg:flex-row lg:items-baseline lg:gap-6"
               >
-                <span className="font-medium">{skill.name}</span>
-                <span className="flex gap-x-3">
-                  {skill.usedIn.map((project) => (
-                    <Link
-                      key={project.slug}
-                      href={`/projects/${project.slug}`}
-                      aria-label={`${project.name}, where I used ${skill.name}`}
-                      className={linkClass}
+                <h3 className="font-medium lg:w-44 lg:shrink-0">
+                  {group.name}
+                </h3>
+                <ul className="flex flex-wrap gap-2">
+                  {group.skills.map((skill) => (
+                    <li
+                      key={skill}
+                      className="rounded-md border border-border bg-chip px-2 py-0.5 text-sm"
                     >
-                      {project.name}
-                    </Link>
+                      {skill}
+                    </li>
                   ))}
-                </span>
-              </li>
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
+          <p className="max-w-[65ch] leading-relaxed">{profile.skillsNote}</p>
         </div>
       </Section>
 
