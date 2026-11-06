@@ -1,3 +1,4 @@
+import { CountUp } from "@/components/count-up";
 import type { Metric } from "@/lib/content/schema";
 
 // One metric as a card. Large cards are the key numbers at the top of a project
@@ -16,7 +17,7 @@ export function MetricCard({
       <p
         className={`font-mono font-semibold ${large ? "text-3xl tracking-tight" : "text-xl"}`}
       >
-        {metric.value}
+        <CountUp value={metric.value} />
       </p>
       <p className={large ? "mt-1" : "font-medium"}>{metric.label}</p>
       {!large && metric.note && (

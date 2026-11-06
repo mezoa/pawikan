@@ -1,6 +1,7 @@
 import { type ComponentPropsWithoutRef, type ReactNode } from "react"
 import Link from "next/link"
 
+import { Tilt } from "@/components/tilt"
 import { cn } from "@/lib/utils"
 
 // Started from the Magic UI bento grid (MIT, magicui.design), then changed to
@@ -37,9 +38,10 @@ const BentoCard = ({
   className,
   ...props
 }: BentoCardProps) => (
-  <li
+  <Tilt
+    as="li"
     className={cn(
-      "sunset-edge relative flex flex-col gap-4 overflow-hidden rounded-xl bg-card p-4 text-card-foreground ring-1",
+      "sunset-edge relative isolate flex flex-col gap-4 rounded-xl p-4 text-card-foreground",
       className
     )}
     {...props}
@@ -52,7 +54,7 @@ const BentoCard = ({
     </h3>
     <p className="text-muted-foreground">{description}</p>
     <div className="flex flex-1 flex-col gap-4">{children}</div>
-  </li>
+  </Tilt>
 )
 
 export { BentoCard, BentoGrid }

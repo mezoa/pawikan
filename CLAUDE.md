@@ -33,11 +33,11 @@ Personal portfolio website for Eo (Meo Angelo Alcantara), a full-stack developer
 - Every dynamic route exports `generateStaticParams` and is pre-rendered. In Next.js 15+, `params` is a Promise: use `await params`.
 
 ## Privacy rules (hard)
-- `csu-core.mdx` stays `published: false` until Eo says he has written approval from the PMO/MIS office. It is also listed in `.gitignore` and `docs/` is git-ignored: never commit, stage or `git add -f` either, because the GitHub repo is public. Run `git status` before every commit and stop if either appears.
-- CSU CORE content is limited to what is in `docs/csu-core-portfolio-factsheet.md`. No screenshots, code, security or server settings, names, handover file names, or legal-compliance claims.
+- CSU CORE (decision of 6 Nov 2026): Eo has the university's permission to show it as a contributor, not as the owner. Role wording is "Contributor". `csu-core.mdx` is built `published: false` first. It becomes `published: true`, and its `.gitignore` line is removed, only after Eo confirms in this session (one line: the approval is in writing, with its date and where it is saved). `docs/` stays git-ignored always: never commit, stage or `git add -f` it. Run `git status` before every commit and stop if `docs/` appears.
+- CSU CORE content is limited to what is in `docs/csu-core-portfolio-factsheet.md`, Parts 1 and 2. No GitHub repo link and no demo link (`links` stays empty). No screenshots, code, security settings (login, token, rate-limit or password details), server or hosting settings (hosting, ports, volumes, paths, environment variables), names, handover file names, funding sources, or legal-compliance claims. Never write "deployed" or "live" unless Eo confirms today's status. If a sentence touches a security or infrastructure limit or risk, leave it out and tell Eo.
 - Never add a phone number, home address, ID number or birth date anywhere.
 - Link the TTLO paper by DOI only (`https://doi.org/10.5109/7395544`). Do not re-host the PDF.
-- Deploy only by git push to GitHub (Vercel builds from there). Never run the vercel CLI or any upload command from this computer while content/projects/csu-core.mdx exists.
+- Deploy only by git push to GitHub (Vercel builds from there). Never run the vercel CLI or any upload command from this computer, because it would upload `docs/` (git-ignored, private).
 
 ## Design rules
 - Dark by default with a light option. Colours come from CSS variables (tokens in `src/app/globals.css`), never hard-coded in components.

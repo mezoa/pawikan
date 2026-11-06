@@ -25,7 +25,7 @@ export function HomeNav() {
           <li key={href}>
             <a
               href={href}
-              className="inline-flex min-h-6 items-center rounded-sm transition-colors duration-200 hover:text-primary motion-reduce:transition-none"
+              className="inline-flex min-h-6 items-center rounded-sm transition-colors duration-200 ease-out hover:text-primary motion-reduce:transition-none"
             >
               {label}
             </a>

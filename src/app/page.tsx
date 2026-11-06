@@ -1,14 +1,36 @@
+import {
+  Briefcase,
+  Coffee,
+  Compass,
+  GraduationCap,
+  Handshake,
+  Languages,
+  MapPin,
+  type LucideIcon,
+} from "lucide-react";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { isTodo, profile } from "../../content/profile";
 import { ProjectCard } from "@/components/project-card";
 import { Reveal } from "@/components/reveal";
 import { ScoreMeter } from "@/components/score-meter";
+import { Tilt } from "@/components/tilt";
 import { BentoGrid } from "@/components/ui/bento-grid";
 import { getAllProjects } from "@/lib/content/projects";
 
 const linkClass =
   "inline-flex min-h-6 items-center text-primary underline underline-offset-4";
+
+// One decorative icon per At a glance row, matched by its label.
+const glanceIcons: Record<string, LucideIcon> = {
+  Location: MapPin,
+  Education: GraduationCap,
+  Focus: Briefcase,
+  "Open to": Handshake,
+  Next: Compass,
+  Languages,
+  "Outside work": Coffee,
+};
 
 // Bento pattern on the 12-column grid: wide + narrow, then narrow + wide.
 const bentoSpans = [
@@ -117,8 +139,12 @@ export default function Home() {
             id="hero-heading"
             className="text-[clamp(3rem,12vw,7.5rem)] leading-none font-semibold tracking-tight"
           >
-            <span className="block">{name.slice(0, lastSpace)}</span>{" "}
-            <span className="block">{name.slice(lastSpace + 1)}</span>
+            <span className="headline-line block">
+              {name.slice(0, lastSpace)}
+            </span>{" "}
+            <span className="headline-line block">
+              {name.slice(lastSpace + 1)}
+            </span>
           </h1>
           <p className="mt-8 text-xl font-medium sm:text-2xl">
             {profile.roleLine}
@@ -162,16 +188,30 @@ export default function Home() {
         aside={
           <>
             <h3 className="text-lg font-semibold">At a glance</h3>
-            <dl className="mt-3 grid gap-3 sm:grid-cols-2">
-              {about.atAGlance.map(({ label, value }) => (
-                <div
-                  key={label}
-                  className="quiet-card rounded-xl bg-card p-3 text-card-foreground ring-1 sm:last:col-span-2"
-                >
-                  <dt className="text-sm text-muted-foreground">{label}</dt>
-                  <dd className="mt-1">{value}</dd>
-                </div>
-              ))}
+            <dl className="mt-3 grid gap-3 md:grid-cols-2">
+              {about.atAGlance.map(({ label, value }) => {
+                const Icon = glanceIcons[label];
+
+                return (
+                  <div
+                    key={label}
+                    className="fact-card quiet-card rounded-xl bg-card p-4 text-card-foreground ring-1 md:last:col-span-2"
+                  >
+                    <dt className="flex items-center gap-2 text-muted-foreground">
+                      {Icon && (
+                        <span
+                          aria-hidden="true"
+                          className="fact-badge inline-flex size-8 shrink-0 items-center justify-center rounded-full"
+                        >
+                          <Icon className="size-4" />
+                        </span>
+                      )}
+                      {label}
+                    </dt>
+                    <dd className="mt-2">{value}</dd>
+                  </div>
+                );
+              })}
             </dl>
           </>
         }
@@ -203,7 +243,7 @@ export default function Home() {
       >
         <ol className="timeline flex flex-col gap-8 lg:grid lg:grid-cols-3 lg:gap-0">
           {profile.experience.map((item) => (
-            <li key={`${item.role}-${item.period}`}>
+            <li key={`${item.role}-${item.period}`} className="hover-line">
               <p className="font-mono text-sm text-muted-foreground">
                 {item.period}
               </p>
@@ -213,7 +253,7 @@ export default function Home() {
             </li>
           ))}
           {profile.education.map((item) => (
-            <li key={`${item.school}-${item.period}`}>
+            <li key={`${item.school}-${item.period}`} className="hover-line">
               <p className="font-mono text-sm text-muted-foreground">
                 {item.period}
               </p>
@@ -225,7 +265,10 @@ export default function Home() {
       </Section>
 
       <Section id="publication" label="Research" title="Publication" stacked>
-        <article className="sunset-edge relative grid gap-8 overflow-hidden rounded-xl bg-card p-5 text-card-foreground ring-1 lg:grid-cols-12 lg:gap-x-12 lg:p-8">
+        <Tilt
+          as="article"
+          className="sunset-edge relative isolate grid gap-8 rounded-xl p-5 text-card-foreground lg:grid-cols-12 lg:gap-x-12 lg:p-8"
+        >
           <div className="flex flex-col gap-4 lg:col-span-5">
             <h3 className="text-lg font-semibold">{publication.title}</h3>
             <p className="text-muted-foreground">
@@ -252,7 +295,7 @@ export default function Home() {
               </li>
             ))}
           </ul>
-        </article>
+        </Tilt>
       </Section>
 
       <Section id="skills" title="Skills" band>

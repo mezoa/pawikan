@@ -1,3 +1,4 @@
+import { CountUp } from "@/components/count-up";
 import type { Metric } from "@/lib/content/schema";
 
 export function MetricChip({ metric }: { metric: Metric }) {
@@ -6,7 +7,9 @@ export function MetricChip({ metric }: { metric: Metric }) {
       <span className="font-mono text-xs text-chip-foreground">
         {metric.kind}
       </span>
-      <span className="font-mono font-medium">{metric.value}</span>
+      <span className="font-mono font-medium">
+        <CountUp value={metric.value} />
+      </span>
       <span className="text-chip-foreground">{metric.label}</span>
     </span>
   );

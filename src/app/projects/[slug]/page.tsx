@@ -105,7 +105,7 @@ export default async function ProjectPage({
           <div className="flex max-w-[65ch] flex-col gap-5">
             <Link
               href="/"
-              className="inline-flex min-h-6 items-center gap-2 self-start rounded-sm text-muted-foreground transition-colors duration-200 hover:text-primary motion-reduce:transition-none"
+              className="inline-flex min-h-6 items-center gap-2 self-start rounded-sm text-muted-foreground transition-colors duration-200 ease-out hover:text-primary motion-reduce:transition-none"
             >
               <ArrowLeft aria-hidden="true" className="size-4" />
               Back to home
@@ -168,7 +168,7 @@ export default async function ProjectPage({
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className="inline-flex min-h-6 items-center rounded-sm text-sm text-muted-foreground transition-colors duration-200 hover:text-primary motion-reduce:transition-none"
+                  className="inline-flex min-h-6 items-center rounded-sm text-sm text-muted-foreground transition-colors duration-200 ease-out hover:text-primary motion-reduce:transition-none"
                 >
                   {heading}
                 </a>

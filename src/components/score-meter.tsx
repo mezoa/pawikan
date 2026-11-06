@@ -1,3 +1,5 @@
+import { CountUp } from "@/components/count-up";
+
 // One score on a fixed 0 to 100 scale. A flat bar on purpose: the design rules
 // allow no circles. The fill uses the control border colour because orange
 // means "you can act on this", and the printed number carries the meaning.
@@ -14,7 +16,7 @@ export function ScoreMeter({
     <div>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <p className="font-mono text-5xl font-semibold tracking-tight sm:text-6xl">
-          {score.toFixed(1)}
+          <CountUp value={score.toFixed(1)} />
           <span className="ml-2 text-lg font-normal tracking-normal text-muted-foreground">
             / 100
           </span>

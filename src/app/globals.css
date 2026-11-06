@@ -271,7 +271,48 @@
   width: 3rem;
   height: 0.25rem;
   border-radius: 0.125rem;
+}
+
+.sunset-bar,
+.hover-line::after {
   background: linear-gradient(90deg, var(--sunset-amber), var(--sunset-rose));
+}
+
+/* The heading bar again, as a hover highlight along a card's bottom edge. It is
+   decoration only: it sits in the card's bottom padding, so never behind text,
+   and shows only where hovering is possible. */
+.hover-line {
+  position: relative;
+}
+
+.hover-line::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 0.25rem;
+  opacity: 0;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition:
+    opacity 200ms ease-out,
+    transform 200ms ease-out;
+}
+
+@media (hover: hover) {
+  .hover-line:hover::after,
+  .sunset-edge:hover > .hover-line::after {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-line::after {
+    transition: none;
+  }
 }
 
 /* An edge-to-edge band behind a section. */
@@ -279,16 +320,31 @@
   background-color: var(--band);
 }
 
-/* A card outline that passes 3:1 and a warm shadow in light mode. Use .quiet-card
-   for cards you cannot click. .sunset-edge adds a sunset edge on hover and
-   keyboard focus, and needs position: relative. */
-.sunset-edge,
+/* A card outline that passes 3:1 and a warm shadow in light mode, for cards you
+   cannot click. */
 .quiet-card {
   --tw-ring-color: var(--border);
   --tw-shadow: var(--card-shadow);
 }
 
-.sunset-edge::before {
+/* A clickable card is two layers. .sunset-edge holds the text and never moves.
+   .card-surface sits behind it with the fill, outline and hover line, and is the
+   part that tilts. Tilt adds the surface. The card needs position: relative and
+   isolate, so the surface stays behind the text. */
+.card-surface {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
+  background-color: var(--card);
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--card-shadow);
+}
+
+/* The sunset edge marks keyboard focus. On hover the line is the main effect. */
+.card-surface::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -305,11 +361,10 @@
     linear-gradient(white 0 0);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 200ms ease;
+  transition: opacity 200ms ease-out;
 }
 
-.sunset-edge:hover::before,
-.sunset-edge:focus-within::before {
+.sunset-edge:focus-within .card-surface::before {
   opacity: 1;
 }
 
@@ -324,7 +379,40 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sunset-edge::before {
+  .card-surface::before {
+    transition: none;
+  }
+}
+
+/* A small fact card with an icon badge. Cards are not links, so hover only
+   changes the colours, and nothing moves. The outline steps up to the muted text
+   token, the next step above the control border that is not orange. The badge
+   swaps to the card colour, or it would vanish into the hovered tint. */
+.fact-card {
+  transition:
+    background-color 200ms ease-out,
+    box-shadow 200ms ease-out;
+}
+
+.fact-badge {
+  background-color: var(--secondary);
+  transition: background-color 200ms ease-out;
+}
+
+@media (hover: hover) {
+  .fact-card:hover {
+    --tw-ring-color: var(--muted-foreground);
+    background-color: var(--secondary);
+  }
+
+  .fact-card:hover .fact-badge {
+    background-color: var(--card);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fact-card,
+  .fact-badge {
     transition: none;
   }
 }
@@ -350,6 +438,12 @@
   background-color: var(--border);
 }
 
+/* Timeline entries have no bottom padding, so the line sits in the gap below. */
+.timeline > li::after {
+  bottom: -0.75rem;
+  border-radius: 0.125rem;
+}
+
 @media (min-width: 64rem) {
   .timeline {
     border-top: 1px solid var(--border);
@@ -366,5 +460,59 @@
     top: 0;
     width: 1px;
     height: 0.875rem;
+  }
+
+  .timeline > li::after {
+    right: 1.5rem;
+  }
+}
+
+/* The hero name, line by line. Plain CSS, so it needs no JavaScript and hides
+   nothing once it ends. 300 ms plus the 100 ms delay stays within 400 ms. */
+@keyframes headline-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.2em);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .headline-line {
+    animation: headline-in 300ms ease-out backwards;
+  }
+
+  .headline-line + .headline-line {
+    animation-delay: 100ms;
+  }
+}
+
+/* The colour washes drift with the scroll, 24px at most. Desktop only: on small
+   screens the top wash sits in a tight gap above the heading. The bottom wash
+   starts 24px up and settles, so it never adds to the page's scroll height. */
+@keyframes wash-drift-down {
+  to {
+    transform: translateY(24px);
+  }
+}
+
+@keyframes wash-drift-settle {
+  from {
+    transform: translateY(-24px);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+    .wash-top {
+      animation: wash-drift-down linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+
+    .wash-bottom {
+      animation: wash-drift-settle linear both;
+      animation-timeline: view();
+      animation-range: entry;
+    }
   }
 }

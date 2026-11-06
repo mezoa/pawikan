@@ -8,7 +8,7 @@ export function SiteHeader() {
       <Link
         href="/"
         aria-label="MA, Meo Angelo Alcantara, home"
-        className="inline-flex size-11 items-center justify-center rounded-md border border-border text-sm font-semibold transition-colors duration-200 hover:text-primary motion-reduce:transition-none"
+        className="inline-flex size-11 items-center justify-center rounded-md border border-border text-sm font-semibold transition-colors duration-200 ease-out hover:text-primary motion-reduce:transition-none"
       >
         MA
       </Link>
