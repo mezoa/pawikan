@@ -8,22 +8,30 @@ const linkClass =
 
 function Section({
   id,
+  label,
   title,
+  band = false,
   children,
 }: {
   id: string;
+  label: string;
   title: string;
+  band?: boolean;
   children: ReactNode;
 }) {
   return (
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      className="grid gap-6 py-10 lg:grid-cols-[14rem_minmax(0,1fr)]"
+      className={`${band ? "peach-band " : ""}grid gap-6 py-14 lg:grid-cols-[14rem_minmax(0,1fr)] dark:py-10`}
     >
-      <h2 id={`${id}-heading`} className="text-xl font-semibold">
-        {title}
-      </h2>
+      <div>
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <h2 id={`${id}-heading`} className="mt-1 text-xl font-semibold">
+          {title}
+        </h2>
+        <div aria-hidden="true" className="sunset-bar mt-3" />
+      </div>
       <div className="min-w-0">{children}</div>
     </section>
   );
@@ -67,10 +75,9 @@ export default function Home() {
       <section
         id="hero"
         aria-labelledby="hero-heading"
-        className="relative isolate py-16 sm:py-24"
+        className="relative isolate pt-24 pb-16 sm:pb-24"
       >
-        <div aria-hidden="true" className="hero-glow" />
-        <div aria-hidden="true" className="sunset-rule absolute inset-x-0 bottom-0" />
+        <div aria-hidden="true" className="wash-top" />
         <h1
           id="hero-heading"
           className="text-[clamp(3rem,12vw,7.5rem)] leading-none font-semibold tracking-tight"
@@ -92,7 +99,12 @@ export default function Home() {
         </div>
       </section>
 
-      <Section id="projects" title="Featured projects">
+      <Section
+        id="projects"
+        label="Selected work"
+        title="Featured projects"
+        band
+      >
         {featured.length > 0 && (
           <ul className="grid gap-4 sm:grid-cols-2">
             {featured.map((project) => (
@@ -104,16 +116,33 @@ export default function Home() {
         )}
       </Section>
 
-      <Section id="about" title="About">
-        <div className="flex max-w-[65ch] flex-col gap-4 leading-relaxed">
-          {profile.about.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
-          <p>{profile.availability}</p>
+      <Section id="about" label="Background" title="About">
+        <div className="flex max-w-[65ch] flex-col gap-8">
+          <div className="flex flex-col gap-4 leading-relaxed">
+            {profile.about.paragraphs.map((paragraph) => (
+              <p key={paragraph}>{paragraph}</p>
+            ))}
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold">At a glance</h3>
+            <dl className="mt-3 grid gap-x-6 gap-y-2 sm:grid-cols-[7rem_minmax(0,1fr)]">
+              {profile.about.atAGlance.map(({ label, value }) => (
+                <div key={label} className="contents">
+                  <dt className="text-muted-foreground">{label}</dt>
+                  <dd className="mb-2 sm:mb-0">{value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </div>
       </Section>
 
-      <Section id="experience" title="Experience and education">
+      <Section
+        id="experience"
+        label="Career so far"
+        title="Experience and education"
+        band
+      >
         <div className="flex max-w-[65ch] flex-col gap-8">
           <div>
             <h3 className="text-lg font-semibold">Experience</h3>
@@ -145,7 +174,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section id="publication" title="Publication">
+      <Section id="publication" label="Research" title="Publication">
         <div className="flex max-w-[65ch] flex-col gap-1">
           <p className="font-medium">{publication.title}</p>
           <p className="text-muted-foreground">
@@ -159,7 +188,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section id="contact" title="Contact">
+      <Section id="contact" label="Get in touch" title="Contact" band>
         <ContactLinks label="Contact links" />
       </Section>
     </>

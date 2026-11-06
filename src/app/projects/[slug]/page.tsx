@@ -44,7 +44,8 @@ export default async function ProjectPage({
   ].filter((link) => link.href);
 
   return (
-    <article className="py-12">
+    <article className="relative isolate pt-24 pb-12 lg:pt-12">
+      <div aria-hidden="true" className="wash-top" />
       <header className="flex max-w-[65ch] flex-col gap-5">
         <Link
           href="/"
@@ -99,7 +100,7 @@ export default async function ProjectPage({
         )}
       </header>
 
-      <div aria-hidden="true" className="sunset-rule mt-10 max-w-[65ch]" />
+      <div aria-hidden="true" className="sunset-rule mt-10" />
 
       <div className="mt-6 max-w-[65ch]">
         <MDXRemote

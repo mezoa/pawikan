@@ -39,6 +39,8 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-chip: var(--chip);
+  --color-chip-foreground: var(--chip-foreground);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -74,8 +76,16 @@
   --sunset-orange: #ea580c;
   --sunset-rose: #e11d48;
   --sunset-dusk: transparent; /* The dusk purple is for the dark glow only. */
-  --glow-strength: 16%;
+  --wash-strength: 9%;
+  --wash-bottom-opacity: 0.55; /* The page is already peach down here, so this field has less room. */
   --line-strength: 45%;
+  /* Light mode's page wash, section bands, chips and card shadow. */
+  --wash-start: #fff7ed;
+  --wash-end: #ffedd9;
+  --band: #ffe8d2;
+  --chip: #ffedd9;
+  --chip-foreground: #2b1408;
+  --card-shadow: 0 1px 2px #8f5f4514, 0 12px 28px -10px #8f5f4533;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -118,8 +128,16 @@
   --sunset-orange: #f97316;
   --sunset-rose: #f43f5e;
   --sunset-dusk: #7c3aed;
-  --glow-strength: 24%;
+  --wash-strength: 12%;
+  --wash-bottom-opacity: 1;
   --line-strength: 80%;
+  /* Dark mode stays flat: no page wash, no bands, plain chips, no card shadow. */
+  --wash-start: #150b0d;
+  --wash-end: #150b0d;
+  --band: transparent;
+  --chip: transparent;
+  --chip-foreground: #d1ae9d;
+  --card-shadow: 0 0 transparent;
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -140,12 +158,14 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
-    /* Lets the hero glow run past the page frame without a sideways scrollbar. */
+    @apply text-foreground;
+    /* Painted on the body so the wash runs once down the whole page. */
+    background-image: linear-gradient(var(--wash-start), var(--wash-end));
+    /* Lets the bands and wash run past the page frame without a sideways scrollbar. */
     overflow-x: clip;
   }
   html {
-    @apply font-sans;
+    @apply bg-background font-sans;
   }
 }
 
@@ -169,58 +189,102 @@
 }
 
 /*
- * Sunset decoration. These three classes are the only places the --sunset
- * tokens are used. All of it is static except the card edge, which fades in
- * when a person hovers or focuses the card.
+ * Sunset decoration. These classes are the only places the --sunset tokens are
+ * used. The wash is static and always sits in empty space, never behind text.
+ * Every field fades to nothing before it reaches an edge of its box, so there
+ * are no hard edges, and the fields overlap at different offsets so no shape
+ * reads as a sun or a circle.
  */
-
-/* A half-sun resting on the horizon line at the bottom of the hero. On a phone
-   it fits inside the hero's empty bottom padding, so it never sits behind text. */
-.hero-glow {
+.wash-top,
+.wash-bottom {
+  --wash-amber: color-mix(in srgb, var(--sunset-amber) var(--wash-strength), transparent);
+  --wash-orange: color-mix(in srgb, var(--sunset-orange) var(--wash-strength), transparent);
+  --wash-rose: color-mix(in srgb, var(--sunset-rose) var(--wash-strength), transparent);
+  --wash-dusk: color-mix(in srgb, var(--sunset-dusk) var(--wash-strength), transparent);
   position: absolute;
-  right: 0;
-  bottom: 0;
   z-index: -1;
-  width: 14rem;
-  height: 3.5rem;
   pointer-events: none;
-  background: radial-gradient(
-    ellipse farthest-side at 50% 100%,
-    color-mix(in srgb, var(--sunset-amber) var(--glow-strength), transparent) 0%,
-    color-mix(in srgb, var(--sunset-orange) calc(var(--glow-strength) * 0.75), transparent) 35%,
-    color-mix(in srgb, var(--sunset-rose) calc(var(--glow-strength) * 0.5), transparent) 62%,
-    color-mix(in srgb, var(--sunset-dusk) calc(var(--glow-strength) * 0.4), transparent) 82%,
-    transparent 100%
-  );
 }
 
-/* On a wide screen it starts after the 65ch text column, so the bio stays clear. */
+/* Top right. On a narrow screen it stays inside the empty space above the heading. */
+.wash-top {
+  top: 0;
+  right: calc((100% - 100vw) / 2);
+  width: 22rem;
+  height: 5rem;
+  background:
+    radial-gradient(ellipse 60% 45% at 100% 45%, var(--wash-amber), 40%, transparent),
+    radial-gradient(ellipse 70% 30% at 85% 30%, var(--wash-orange), 40%, transparent),
+    radial-gradient(ellipse 50% 40% at 70% 55%, var(--wash-rose), 40%, transparent),
+    radial-gradient(ellipse 60% 50% at 90% 50%, var(--wash-dusk), 40%, transparent);
+}
+
+/* On a wide screen it fills the space beside the 65ch text column, up to the top of the page. */
 @media (min-width: 64rem) {
-  .hero-glow {
+  .wash-top {
+    top: -4.75rem;
     left: calc(65ch + 1.5rem);
-    right: -8rem;
     width: auto;
-    height: 20rem;
+    height: calc(100% + 4.75rem);
+    max-height: 44rem;
   }
 }
 
-/* A thin divider line. */
+/* Lower left, in the empty space the footer keeps below its text. */
+.wash-bottom {
+  bottom: 0;
+  left: calc((100% - 100vw) / 2);
+  width: 100vw;
+  height: 8rem;
+  opacity: var(--wash-bottom-opacity);
+  background:
+    radial-gradient(ellipse 45% 45% at 0% 50%, var(--wash-amber), 40%, transparent),
+    radial-gradient(ellipse 60% 35% at 18% 65%, var(--wash-orange), 40%, transparent),
+    radial-gradient(ellipse 40% 45% at 32% 55%, var(--wash-rose), 40%, transparent),
+    radial-gradient(ellipse 50% 50% at 12% 50%, var(--wash-dusk), 40%, transparent);
+}
+
+@media (min-width: 64rem) {
+  .wash-bottom {
+    width: 52rem;
+    height: 12rem;
+  }
+}
+
+/* A thin divider that starts strong and fades out to the right. It stops at the
+   text width, so it reads as a rule and not as a horizon across the page. */
 .sunset-rule {
+  max-width: 65ch;
   height: 1px;
   background: linear-gradient(
     90deg,
-    transparent,
     color-mix(in srgb, var(--sunset-amber) var(--line-strength), transparent),
-    color-mix(in srgb, var(--sunset-orange) var(--line-strength), transparent),
-    color-mix(in srgb, var(--sunset-rose) var(--line-strength), transparent),
+    color-mix(in srgb, var(--sunset-rose) var(--line-strength), transparent) 45%,
     transparent
   );
 }
 
-/* A card outline that passes 3:1, plus a sunset edge on hover and keyboard focus.
+/* The short bar under each section heading. */
+.sunset-bar {
+  width: 3rem;
+  height: 0.25rem;
+  border-radius: 0.125rem;
+  background: linear-gradient(90deg, var(--sunset-amber), var(--sunset-rose));
+}
+
+/* A full-width band behind a section. The shadow carries the colour past the
+   page frame and the clip keeps it from spilling above or below. */
+.peach-band {
+  background-color: var(--band);
+  box-shadow: 0 0 0 100vmax var(--band);
+  clip-path: inset(0 -100vmax);
+}
+
+/* A card outline that passes 3:1, a warm shadow in light mode, and a sunset edge on hover and keyboard focus.
    The card needs position: relative. */
 .sunset-edge {
   --tw-ring-color: var(--border);
+  --tw-shadow: var(--card-shadow);
 }
 
 .sunset-edge::before {

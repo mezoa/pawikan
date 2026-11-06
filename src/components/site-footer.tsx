@@ -1,8 +1,9 @@
 export function SiteFooter() {
   return (
-    <footer className="page-frame pb-10 text-muted-foreground">
+    <footer className="page-frame relative isolate pb-40 text-muted-foreground lg:pb-56">
       <div aria-hidden="true" className="sunset-rule mb-10" />
       <p>Built with Next.js, Tailwind, shadcn/ui</p>
+      <div aria-hidden="true" className="wash-bottom" />
     </footer>
   );
 }
