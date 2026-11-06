@@ -12,17 +12,30 @@ const REQUIRED_HEADINGS = [
   "Proof of work",
   "Limitations and failure modes",
 ];
+const OPTIONAL_HEADINGS = ["What I would do next"];
 const MIN_SECTION_LENGTH = 40;
+
+export type ProjectSection = {
+  heading: string; // "" for any text above the first heading
+  id: string; // the web address anchor
+  body: string;
+};
 
 export type Project = ProjectFrontmatter & {
   slug: string; // the file name without .mdx; also the web address
   body: string; // the MDX text below the frontmatter
+  sections: ProjectSection[]; // the body, one entry per "## " heading
 };
+
+/** True if a path such as /images/a.webp is a file in public/. */
+export function publicFileExists(src: string) {
+  return fs.existsSync(path.join(process.cwd(), "public", src));
+}
 
 /** Splits the body into { "Problem": "text under it", ... }. Only "## " headings count. */
 function getSections(body: string) {
-  const sections = new Map<string, string>();
-  let current: string | undefined;
+  const sections = new Map<string, string>([["", ""]]);
+  let current = "";
   let inCodeBlock = false;
 
   for (const line of body.split(/\r?\n/)) {
@@ -32,7 +45,7 @@ function getSections(body: string) {
     if (heading) {
       current = heading[1];
       sections.set(current, sections.get(current) ?? "");
-    } else if (current) {
+    } else {
       sections.set(current, `${sections.get(current)}${line}\n`);
     }
   }
@@ -57,7 +70,34 @@ function findBodyProblems(body: string) {
       );
     }
   }
+  for (const heading of OPTIONAL_HEADINGS) {
+    const length = sections.get(heading)?.trim().length;
+    if (length !== undefined && length < MIN_SECTION_LENGTH) {
+      problems.push(
+        `"## ${heading}" has ${length} characters of text, needs at least ${MIN_SECTION_LENGTH}`,
+      );
+    }
+  }
   return problems;
+}
+
+/** Each listed image must be a real file, so no broken image can go public. */
+function findImageProblems(frontmatter: ProjectFrontmatter) {
+  const images = [frontmatter.heroImage, ...(frontmatter.gallery ?? [])];
+  return images
+    .filter((image) => image && !publicFileExists(image.src))
+    .map((image) => `image "${image?.src}" is not in public/`);
+}
+
+/** The body as ordered sections, ready for the project page. */
+function toSections(body: string): ProjectSection[] {
+  return [...getSections(body)]
+    .filter(([heading, text]) => heading || text.trim())
+    .map(([heading, text]) => ({
+      heading,
+      id: heading.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      body: text,
+    }));
 }
 
 function loadProject(fileName: string): Project {
@@ -89,12 +129,14 @@ function loadProject(fileName: string): Project {
       ),
     );
   }
+  if (frontmatter.success) problems.push(...findImageProblems(frontmatter.data));
   if (problems.length > 0) fail(problems);
 
   return {
     ...(frontmatter.data as ProjectFrontmatter),
     slug: fileName.replace(/\.mdx$/, ""),
     body: content,
+    sections: toSections(content),
   };
 }
 

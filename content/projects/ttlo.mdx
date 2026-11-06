@@ -2,6 +2,7 @@
 title: "TTLO Portfolio Management System"
 summary: "A web application for a university Technology Transfer and Licensing Office, made to improve its IP protection application process and workload management."
 date: 2025-10-30
+period: "Published Oct 2025"
 status: "archived"
 published: true
 featured: true
@@ -31,13 +32,33 @@ metrics:
     value: "5 per user group"
     kind: "scope"
     note: "Role-specific task scenarios for clients and for admin/staff, as listed in the paper."
+chart:
+  title: "Task success rate, by user group"
+  caption: "Per-task results from the paper's task tables. The paper does not report how many people took part."
+  groups:
+    - name: "Clients"
+      rows:
+        - { label: "Submit Profile Form", value: 80, max: 100, display: "80%" }
+        - { label: "Submit Deed of Assignment", value: 100, max: 100, display: "100%" }
+        - { label: "Track Application Status", value: 80, max: 100, display: "80%" }
+        - { label: "Review of IP Guidelines", value: 100, max: 100, display: "100%" }
+        - { label: "View News and Updates", value: 100, max: 100, display: "100%" }
+    - name: "Admins"
+      rows:
+        - { label: "Assign Staff to Application", value: 100, max: 100, display: "100%" }
+        - { label: "Review IP Deed Submissions", value: 100, max: 100, display: "100%" }
+        - { label: "Manage Application Phases", value: 60, max: 100, display: "60%" }
+        - { label: "Schedule Event on Calendar", value: 100, max: 100, display: "100%" }
+        - { label: "Manage User Accounts", value: 100, max: 100, display: "100%" }
 ---
 
 ## Problem
 
 The Technology Transfer and Licensing Office (TTLO) of Caraga State University handles intellectual property (IP) protection applications. The office relied on tools such as Google Docs and Google Sheets. With data spread across platforms, it could get duplicated, tracking updates could be slow, and status could be hard to follow.
 
+<Callout>
 The study set out to improve the application process and workload management, and to secure data access.
+</Callout>
 
 ## Architecture
 
@@ -54,16 +75,18 @@ The design uses the MVC pattern in a three-tier structure: presentation, busines
 
 The paper describes the stack as "almost entirely NextJS and Postgres".
 
-| Tool | What it does here |
-| --- | --- |
-| Next.js | The web application framework. |
-| PostgreSQL | The relational database. |
-| HTML, CSS, JS | The user interface layer. |
-| Figma | High-fidelity wireframes. |
+<Tradeoffs>
+  <Tradeoff tool="Next.js" what="The web application framework." />
+  <Tradeoff tool="PostgreSQL" what="The relational database." />
+  <Tradeoff tool="HTML, CSS, JS" what="The user interface layer." />
+  <Tradeoff tool="Figma" what="High-fidelity wireframes." />
+</Tradeoffs>
 
 The team also used UML diagrams, entity relationship diagrams and use case diagrams. Development followed an Agile life cycle.
 
 ## Proof of work
+
+<MetricRow />
 
 The work is published as "Web-based Portfolio Management System for Technology Transfer and Licensing Offices" in the Proceedings of International Exchange and Innovation Conference on Engineering & Sciences (IEICES) 11, pp. 377-382, Oct 2025. It has four authors. [Read the paper through its DOI](https://doi.org/10.5109/7395544).
 
@@ -78,6 +101,8 @@ Per-task success rates:
 - **Clients.** 100% on the deed, guidelines and news tasks. 80% on the profile form and status tracking.
 - **Admins.** 100% on four tasks. 60% on Manage Application Phases.
 
+<ProjectChart />
+
 The longest average times were 188.2 s for the client profile form and 204.2 s for Manage Application Phases.
 
 ## Limitations and failure modes
@@ -89,6 +114,8 @@ The longest average times were 188.2 s for the client profile form and 204.2 s f
 - Users met system lag from ongoing development.
 - Admins struggled most with Manage Application Phases.
 - Each office has its own workflow, so implementation may differ for other offices.
+
+## What I would do next
 
 The paper's own recommendations:
 

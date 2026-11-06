@@ -7,6 +7,7 @@
 title: "[Project name]"
 summary: "[One sentence: the problem it solves. 20 to 200 characters.]"
 date: 2026-11-01            # the date you finished or last updated it (YYYY-MM-DD)
+# period: "Oct 15 to Nov 2, 2026"   # shown on the page; without it the page shows the date
 status: "live"              # live | building | archived
 published: true             # false = hidden everywhere (use for anything not yet approved)
 featured: true              # true = appears in the home page grid
@@ -26,6 +27,19 @@ metrics:
     kind: "outcome"          # outcome = a measured result | scope = size only (like "2 modules")
     note: "[How you measured it]"
 # cover: "/images/[file].png"
+# heroImage:                 # shown beside the title; the file must exist in public/images/
+#   src: "/images/[file].webp"
+#   alt: "[One sentence saying what the image shows]"
+# gallery:                   # shown at the end of Proof of work
+#   - src: "/images/[file].webp"
+#     alt: "[One sentence saying what the image shows]"
+#     caption: "[Optional caption]"
+# chart:                     # shown where the body says <ProjectChart />. Each bar is value out of max
+#   title: "[What the chart shows]"
+#   caption: "[How it was measured]"
+#   groups:
+#     - rows:
+#         - { label: "[Row name]", value: 13, max: 14, display: "13 of 14" }
 # privacyNote: "[Shown on the page if set. Use for institutional projects.]"
 ---
 
@@ -33,21 +47,37 @@ metrics:
 
 [Who has this problem and why it matters. 3 to 5 sentences. No buzzwords.]
 
+<Callout>
+[The one point a reader should remember.]
+</Callout>
+
 ## Architecture
 
-[Add a simple diagram image or a short list: what talks to what. Then 2 to 3 trade-offs: "I chose X over Y because ..."]
+[Add a short list: what talks to what. Then 2 to 3 trade-offs: "I chose X over Y because ..."]
+
+{/* The diagram slot. When you have one, replace this comment with:
+<Figure src="/images/[file].webp" alt="[What the diagram shows]" caption="[Optional caption]" />
+*/}
 
 ## Tech stack choices
 
-| Tool | Why I used it |
-| --- | --- |
-| [Tool 1] | [Reason] |
-| [Tool 2] | [Reason] |
+{/* Add tradeoff="..." to a card only if a source names one. */}
+<Tradeoffs>
+  <Tradeoff tool="[Tool 1]" what="[What it does here]" />
+  <Tradeoff tool="[Tool 2]" what="[What it does here]" />
+</Tradeoffs>
 
 ## Proof of work
+
+<MetricRow />
 
 [The numbers from the frontmatter, in words: what you measured, how, and what the result means. Link the repo. Add a short video if you have one.]
 
 ## Limitations and failure modes
 
-[Honest list: what it cannot do, known bugs, what is not built yet, what you would change next. At least 2 items.]
+- [Honest list: what it cannot do, known bugs, what is not built yet. At least 2 items.]
+- [Each list item here gets a warning icon.]
+
+## What I would do next
+
+[Optional heading. What you would change next, and why.]

@@ -2,6 +2,7 @@
 title: "Project Agila"
 summary: "A private, local assistant. It answers only from your saved links, notes and PDFs, with a citation, or says it cannot find the answer."
 date: 2026-11-02
+period: "Oct 15 to Nov 2, 2026"
 status: "live"
 published: true
 featured: true
@@ -58,13 +59,26 @@ metrics:
     value: "69"
     kind: "scope"
     note: "Rows counted in DEVIATIONS.md on 2026-11-06."
+chart:
+  title: "Evaluation results, each as a share of its own total"
+  caption: "All four come from the 2026-10-26 evaluation. The set has 20 questions, so this is a regression check, not proof of quality."
+  groups:
+    - rows:
+        - { label: "Retrieval hit@3", value: 13, max: 14, display: "13 of 14" }
+        - { label: "hit@3, held-out half", value: 7, max: 7, display: "7 of 7" }
+        - { label: "Refused with no model call", value: 5, max: 6, display: "5 of 6" }
+        - { label: "Citations graded yes", value: 13, max: 21, display: "13 of 21" }
 ---
 
 ## Problem
 
 Agila is a personal knowledge assistant for one owner on one Windows laptop. You save links, pasted text, Markdown files and text PDFs. You ask a question and get a short answer that cites the saved passage.
 
-If the saved material does not support an answer, you get one fixed refusal: "I couldn't find this in your saved material." Agila was built with Claude Code under my direction and checks, for my own use and as portfolio proof for AI and automation work.
+<Callout>
+If the saved material does not support an answer, you get one fixed refusal: "I couldn't find this in your saved material."
+</Callout>
+
+Agila was built with Claude Code under my direction and checks, for my own use and as portfolio proof for AI and automation work.
 
 ## Architecture
 
@@ -81,23 +95,27 @@ Trade-offs:
 
 ## Tech stack choices
 
-| Tool | What it does here |
-| --- | --- |
-| Ollama with qwen3.5:4b | Runs the model on the laptop. It matched the 9b model at 19 of 20 correct in a test of 10 questions and 2 runs, and was about 2.5 times faster. |
-| PostgreSQL 17 with pgvector | Stores the saved passages and finds the closest ones. |
-| fastembed with bge-small-en-v1.5 | Creates 384-dimension embeddings. |
-| FastAPI | Serves the local API. It uses an API-key header and is bound to 127.0.0.1. |
-| discord.py | Runs the Discord bot with slash commands. |
-| n8n | Runs the weekly digest and the save workflow. It is pinned by image digest. |
-| pypdf | Reads text from PDFs. |
-| Docker Compose | Runs the services in containers on Docker Desktop. |
-| GitHub Actions | Runs ruff and the plain tests on `windows-latest`. |
+<Tradeoffs>
+  <Tradeoff tool="Ollama with qwen3.5:4b" what="Runs the model on the laptop. It matched the 9b model at 19 of 20 correct in a test of 10 questions and 2 runs, and was about 2.5 times faster." tradeoff='Median answers take 12.0 s, and 8 of 21 citations were graded "partly".' />
+  <Tradeoff tool="FastAPI" what="Serves the local API. It uses an API-key header and is bound to 127.0.0.1." tradeoff="Private documents stay behind the API, so private notes work only from the CLI or the web page." />
+  <Tradeoff tool="PostgreSQL 17 with pgvector" what="Stores the saved passages and finds the closest ones." />
+  <Tradeoff tool="fastembed with bge-small-en-v1.5" what="Creates 384-dimension embeddings." />
+  <Tradeoff tool="discord.py" what="Runs the Discord bot with slash commands." />
+  <Tradeoff tool="n8n" what="Runs the weekly digest and the save workflow. It is pinned by image digest." />
+  <Tradeoff tool="pypdf" what="Reads text from PDFs." />
+  <Tradeoff tool="Docker Compose" what="Runs the services in containers on Docker Desktop." />
+  <Tradeoff tool="GitHub Actions" what="Runs ruff and the plain tests on windows-latest." />
+</Tradeoffs>
 
 ## Proof of work
+
+<MetricRow />
 
 The plan was 15 build days, and the work finished on Nov 2, 2026. The [repository](https://github.com/mezoa/agila) has three tagged releases: `v0.1-core`, `v0.2` and `v1.0`.
 
 The evaluation used 20 questions: 14 answerable and 6 unanswerable. One half was for tuning. The other half was held out and run once. hit@3 was 13 of 14, and 7 of 7 on the held-out half. Agila refused 5 of the 6 unanswerable questions without calling the model.
+
+<ProjectChart />
 
 Median answer time was 12.0 s and the slowest was 16.3 s. I graded 21 citations by hand: 13 yes, 8 partly, 0 no. The right document was cited in all 21.
 
@@ -127,5 +145,7 @@ Checking also caught real mistakes:
 - $0 was the design target and `.env.example` holds no hosted-model key, but no formal cost result was recorded.
 - Not measured: peak RAM, real users other than me, lines of code, total build hours, and the share of work done by me and by Claude Code.
 - Not measured on the final version: the clean-clone test count and a restore test of the final backup.
+
+## What I would do next
 
 Next I would make answers shorter, improve ranking for vague questions, and use a bigger held-out question set.
