@@ -82,6 +82,8 @@ Agila was built with Claude Code under my direction and checks, for my own use a
 
 ## Architecture
 
+<AgilaFlow />
+
 A question is embedded on the laptop. PostgreSQL with pgvector finds the closest saved passages. If the match is below the 0.68 floor, Agila refuses and calls no model. Otherwise a local model must return JSON with the answer and its citations. Pydantic checks the reply. Every citation must point to a retrieved passage. An invalid reply gets one retry.
 
 Only one module talks to Ollama. The CLI and the API share one question function. The Discord bot and n8n call the API.
@@ -92,6 +94,54 @@ Trade-offs:
 - **Strict answers.** Checking every reply takes extra code and can cost one more model call.
 - **Privacy in the API.** Private documents are visible only to the `web` channel. Discord and n8n never see them, so private notes work only from the CLI or the web page.
 - **Safe web fetching.** Agila refuses private, local and reserved addresses before the first request and after each redirect. Internal-network links cannot be saved.
+
+## See it run
+
+These are real outputs from Agila. The output text is unedited. Only the prompt is shortened, to `PS agila>`.
+
+<Transcript caption="A saved note and a cited answer, from the fresh-clone test on 2026-10-31. This is the working answer that took 14 min 8 s.">
+
+```text
+PS agila> "The harbour lights are green on Tuesdays. This note is a first test. Nothing else is here." | uv run --env-file .env python -m agila.cli text --title "First test" --label first-test
+Saved First test: 1 chunks
+
+PS agila> uv run --env-file .env python -m agila.cli ask "What colour are the harbour lights on Tuesdays?"
+The harbour lights are green on Tuesdays.
+
+Sources:
+1. "The harbour lights are green on Tuesdays."
+   First test (first-test, saved 2026-10-31)
+```
+
+</Transcript>
+
+<Transcript caption="A refusal in Discord on 2026-10-27. The best match was below the 0.68 floor, so no model was called.">
+
+```text
+/ask question: How do I bake sourdough bread?
+Nothing close enough: the best similarity was 0.55, below the threshold 0.68.
+I couldn't find this in your saved material.
+```
+
+</Transcript>
+
+<Transcript caption="A private note on 2026-10-31. Two test notes were back-dated on purpose so they would count as stale. The private one is left out of the plain stale list. Both were deleted afterwards.">
+
+```text
+PS agila> "Private digest check: this private note must never reach Discord. It will be deleted today. Nothing else is here." | uv run --env-file .env python -m agila.cli text --title "Private digest check" --label private-digest-check --private
+Saved Private digest check: 1 chunks
+
+PS agila> uv run --env-file .env python -m agila.cli stale --include-private
+Stale documents: 2.
+35  2026-09-21  text  Digest check  (never asked)
+36  2026-09-21  text  Private digest check  (never asked)
+
+PS agila> uv run --env-file .env python -m agila.cli stale
+Stale documents: 1.
+35  2026-09-21  text  Digest check  (never asked)
+```
+
+</Transcript>
 
 ## Tech stack choices
 

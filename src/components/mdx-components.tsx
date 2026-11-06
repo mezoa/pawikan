@@ -2,6 +2,7 @@ import { TriangleAlert } from "lucide-react";
 import Image from "next/image";
 import type { ComponentProps, ReactNode } from "react";
 import type { MDXRemoteProps } from "next-mdx-remote/rsc";
+import { AgilaFlow } from "@/components/agila-flow";
 import { MetricCard } from "@/components/metric-card";
 import { ProofChart } from "@/components/proof-chart";
 import { publicFileExists, type Project } from "@/lib/content/projects";
@@ -51,6 +52,24 @@ export function Figure({
           {caption}
         </figcaption>
       )}
+    </figure>
+  );
+}
+
+/** Real program output. Long lines wrap, so a phone needs no sideways scroll. */
+export function Transcript({
+  caption,
+  children,
+}: {
+  caption: string;
+  children: ReactNode;
+}) {
+  return (
+    <figure className="my-6 [&_pre]:my-0 [&_pre]:break-words [&_pre]:whitespace-pre-wrap">
+      {children}
+      <figcaption className="mt-2 text-sm leading-relaxed text-muted-foreground">
+        {caption}
+      </figcaption>
     </figure>
   );
 }
@@ -135,8 +154,10 @@ export const mdxComponents: MDXRemoteProps["components"] = {
   td: (props: ComponentProps<"td">) => (
     <td className="border-b border-border py-2 pr-4 align-top" {...props} />
   ),
+  AgilaFlow,
   Callout,
   Figure,
+  Transcript,
   Tradeoffs,
   Tradeoff,
 };

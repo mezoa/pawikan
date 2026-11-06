@@ -12,7 +12,7 @@ const REQUIRED_HEADINGS = [
   "Proof of work",
   "Limitations and failure modes",
 ];
-const OPTIONAL_HEADINGS = ["What I would do next"];
+const OPTIONAL_HEADINGS = ["See it run", "What I would do next"];
 const MIN_SECTION_LENGTH = 40;
 
 export type ProjectSection = {
