@@ -88,6 +88,12 @@ A question is embedded on the laptop. PostgreSQL with pgvector finds the closest
 
 Only one module talks to Ollama. The CLI and the API share one question function. The Discord bot and n8n call the API.
 
+<ArchitectureDiagram
+  nodes="Discord bot and n8n | FastAPI | Question function | PostgreSQL with pgvector | Ollama"
+  notes="Call the API | The local API | The CLI uses it too | Finds the closest passages | Runs the local model"
+  caption="The main parts a question passes through from the API. Ollama is called only when the best match reaches the 0.68 floor. All of it runs on one laptop."
+/>
+
 Trade-offs:
 
 - **Refuse instead of guess.** The floor stops weak matches, but 3 of 14 valid short questions were refused wrongly.

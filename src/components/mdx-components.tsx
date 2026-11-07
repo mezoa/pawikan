@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { ComponentProps, ReactNode } from "react";
 import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import { AgilaFlow } from "@/components/agila-flow";
+import { ArchitectureDiagram } from "@/components/architecture-diagram";
 import { MetricCard } from "@/components/metric-card";
 import { ProofChart } from "@/components/proof-chart";
 import { ThreeBoxFlow } from "@/components/three-box-flow";
@@ -169,6 +170,7 @@ export const mdxComponents: MDXRemoteProps["components"] = {
     <td className="border-b border-border py-2 pr-4 align-top" {...props} />
   ),
   AgilaFlow,
+  ArchitectureDiagram,
   Callout,
   Figure,
   ThreeBoxFlow,
