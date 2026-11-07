@@ -3,6 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { ThemeProvider } from "@/components/theme-provider";
+import {
+  openGraphDefaults,
+  SITE_NAME,
+  SITE_URL,
+  twitterDefaults,
+} from "@/lib/site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,9 +22,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Meo Angelo Alcantara | Full-stack developer building AI automation",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Meo Angelo Alcantara | Full-stack developer building AI automation",
+    template: `%s | ${SITE_NAME}`,
+  },
   description:
     "Full-stack developer building AI automation. Based in Surigao City, Philippines. Open to remote roles and private-sector software development roles.",
+  openGraph: openGraphDefaults,
+  twitter: twitterDefaults,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

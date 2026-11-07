@@ -14,6 +14,7 @@ import {
   statusLabels,
   type Project,
 } from "@/lib/content/projects";
+import { openGraphDefaults, twitterDefaults } from "@/lib/site";
 
 // Only the addresses from generateStaticParams exist. Anything else is a 404.
 export const dynamicParams = false;
@@ -65,9 +66,15 @@ export async function generateMetadata({
   const project = getProject(slug);
   if (!project) return {};
 
+  const title = project.title;
+  const description = project.summary;
+
   return {
-    title: `${project.title} | Meo Angelo Alcantara`,
-    description: project.summary,
+    title, // the layout's template adds the name
+    description,
+    alternates: { canonical: `/projects/${slug}` },
+    openGraph: { ...openGraphDefaults, title, description },
+    twitter: { ...twitterDefaults, title, description },
   };
 }
 
