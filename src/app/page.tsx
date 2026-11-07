@@ -13,6 +13,7 @@ import type { ReactNode } from "react";
 import { isTodo, profile } from "../../content/profile";
 import { HeroArt } from "@/components/hero-art";
 import { ProjectCard } from "@/components/project-card";
+import { ResumeLink } from "@/components/resume-link";
 import { Reveal } from "@/components/reveal";
 import { ScoreMeter } from "@/components/score-meter";
 import { Tilt } from "@/components/tilt";
@@ -85,7 +86,13 @@ function Section({
   );
 }
 
-function ContactLinks({ label }: { label: string }) {
+function ContactLinks({
+  label,
+  children,
+}: {
+  label: string;
+  children?: ReactNode;
+}) {
   const { github, linkedin, email } = profile.links;
   const links = [
     { name: "GitHub", value: github, href: github },
@@ -109,6 +116,7 @@ function ContactLinks({ label }: { label: string }) {
           )}
         </li>
       ))}
+      {children && <li>{children}</li>}
     </ul>
   );
 }
@@ -149,7 +157,9 @@ export default function Home() {
             {profile.location}. {profile.availability}
           </p>
           <div className="mt-6">
-            <ContactLinks label="Profile links" />
+            <ContactLinks label="Profile links">
+              <ResumeLink />
+            </ContactLinks>
           </div>
         </div>
       </section>

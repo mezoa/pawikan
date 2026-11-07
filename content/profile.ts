@@ -51,6 +51,7 @@ export type Profile = {
     github: string;
     linkedin: string;
     email: string;
+    resume: string;
   };
   experience: ExperienceItem[]; // newest first
   education: EducationItem[];
@@ -112,6 +113,7 @@ export const profile: Profile = {
     github: `https://github.com/mezoa`,
     linkedin: `https://www.linkedin.com/in/meo-angelo-alcantara-97571b443`,
     email: `meoangeloalcantara@gmail.com`,
+    resume: `/resume.pdf`,
   },
   experience: [
     {
