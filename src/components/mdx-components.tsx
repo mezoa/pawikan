@@ -57,7 +57,7 @@ export function Figure({
   );
 }
 
-/** Real program output. Long lines wrap, so a phone needs no sideways scroll. */
+/** Real program output. Lines stay whole, and a long one scrolls inside its own box. */
 export function Transcript({
   caption,
   children,
@@ -66,7 +66,7 @@ export function Transcript({
   children: ReactNode;
 }) {
   return (
-    <figure className="my-6 [&_pre]:my-0 [&_pre]:break-words [&_pre]:whitespace-pre-wrap">
+    <figure className="my-6 [&_pre]:my-0">
       {children}
       <figcaption className="mt-2 text-sm leading-relaxed text-muted-foreground">
         {caption}
@@ -136,11 +136,24 @@ export const mdxComponents: MDXRemoteProps["components"] = {
       {...props}
     />
   ),
+  // Inline code stays on one line. Inside a block it must keep its line breaks.
   code: (props: ComponentProps<"code">) => (
-    <code className="font-mono text-[0.9em]" {...props} />
+    <code
+      className="font-mono text-[0.9em] whitespace-nowrap [pre_&]:whitespace-pre"
+      {...props}
+    />
   ),
+  // tabIndex and the name let keyboard users reach the block and scroll it with
+  // the arrow keys. The outline is for light mode, where bg-muted nearly
+  // matches the page. A ring takes no space, so dark mode stays pixel-identical.
   pre: (props: ComponentProps<"pre">) => (
-    <pre className="my-4 overflow-x-auto rounded-md bg-muted p-4" {...props} />
+    <pre
+      tabIndex={0}
+      role="group"
+      aria-label="Code block"
+      className="my-4 overflow-x-auto rounded-md bg-muted p-4 ring-1 ring-border dark:ring-0"
+      {...props}
+    />
   ),
   // The wrapper lets a wide table scroll sideways on a phone. tabIndex lets
   // keyboard users focus it and scroll with the arrow keys.
@@ -168,7 +181,7 @@ export const mdxComponents: MDXRemoteProps["components"] = {
 const limitationComponents: MDXRemoteProps["components"] = {
   ul: (props: ComponentProps<"ul">) => (
     <ul
-      className="my-4 flex flex-col gap-3 rounded-lg bg-secondary p-4 text-secondary-foreground"
+      className="my-4 flex flex-col gap-3 rounded-lg bg-secondary p-4 text-secondary-foreground ring-1 ring-border dark:ring-0"
       {...props}
     />
   ),

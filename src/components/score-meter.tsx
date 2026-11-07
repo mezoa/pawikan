@@ -21,7 +21,7 @@ export function ScoreMeter({
             / 100
           </span>
         </p>
-        <p className="text-right">
+        <p className="sm:text-right">
           <span className="block font-medium">{label}</span>
           <span className="block text-sm text-muted-foreground">{grade}</span>
         </p>
