@@ -43,7 +43,7 @@ export function ProjectCard({ project }: { project: Project }) {
         </Link>
       </h3>
 
-      <p className="line-clamp-4 text-muted-foreground">{project.summary}</p>
+      <p className="text-muted-foreground">{project.summary}</p>
 
       <ul className="flex flex-wrap content-start gap-1.5" aria-label="Tech stack">
         {project.techStack.slice(0, MAX_CHIPS).map((tech) => (

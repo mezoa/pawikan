@@ -500,7 +500,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .fact-card,
-  .fact-badge {
+  .fact-badge,
+  [data-slot="button"] {
     transition: none;
   }
 }
