@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pawikan
 
-## Getting Started
+The personal portfolio of Meo Angelo Alcantara, a full-stack developer building AI automation. It shows who I am, my projects, and real measured proof of the work.
 
-First, run the development server:
+Live site: https://pawikan-lilac.vercel.app
+
+## Stack
+
+- Next.js (App Router), TypeScript and Tailwind CSS, with shadcn/ui components
+- One MDX file per project, checked when the site builds
+- Hosted on Vercel, which deploys each push to GitHub by itself
+
+There is no database, backend or login. Every page is built ahead of time.
+
+## Run it locally
+
+You need Node.js 22.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install      # get the packages
+npm run dev      # run the site at http://localhost:3000
+npm run build    # make a production build, and check every project file
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Add a project in 10 minutes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Copy `PROJECT_TEMPLATE.mdx` to `content/projects/<short-name>.mdx`. The file name becomes the web address: `/projects/<short-name>`.
+2. Replace every `[bracket]` with your own text. Use real numbers only.
+3. Run `npm run build`. If something is missing, the build fails and tells you what.
+4. Push to GitHub. Vercel puts it live.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Hiding a project
 
-## Learn More
+Set `published: false` at the top of a project file. It then disappears everywhere: the home page, the project list and the sitemap, and its web address shows "not found". Change it to `true` and push to bring it back.
 
-To learn more about Next.js, take a look at the following resources:
+## Versions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Checked on 8 Nov 2026, from `package.json`:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Package | Version |
+| --- | --- |
+| Next.js | 16.4.5 |
+| React | 19.3.0 |
+| Tailwind CSS | 4.3.4 (`package.json` allows any `^4`) |
